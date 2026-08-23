@@ -1,26 +1,221 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:        #030712;
+  --surface:   #0f172a;
+  --surface-2: #1e293b;
+  --border:    rgba(99, 102, 241, 0.15);
+  --border-2:  rgba(99, 102, 241, 0.35);
+  --accent:    #6366f1;
+  --highlight: #22d3ee;
+  --text:      #f1f5f9;
+  --muted:     #64748b;
+  --glow-indigo: rgba(99, 102, 241, 0.4);
+  --glow-cyan:   rgba(34, 211, 238, 0.35);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #818cf8;
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────────── */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: #e0e7ff;
+}
+
+/* ─── Keyframe Animations ────────────────────────────────────────────────────── */
+
+/* Shimmer sweep — used on CTA buttons */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+/* Slow gradient shift — used on name/accent text */
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Soft glow pulse — used on profile image ring */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px 4px var(--glow-cyan), 0 0 60px 8px rgba(34, 211, 238, 0.1); }
+  50%       { box-shadow: 0 0 35px 8px var(--glow-cyan), 0 0 90px 16px rgba(34, 211, 238, 0.2); }
+}
+
+/* Gentle float — used on profile image */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+/* Blink cursor — used in typewriter */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Spin slow — decorative rings */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Fade up — generic entrance */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Dot grid pulse — hero background */
+@keyframes grid-fade {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.7; }
+}
+
+/* ─── Utility Classes ────────────────────────────────────────────────────────── */
+
+/* Animated gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #818cf8, #22d3ee, #6366f1, #a78bfa);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* Static indigo→cyan gradient text (no animation) */
+.gradient-text-static {
+  background: linear-gradient(135deg, #818cf8 0%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glassmorphism card */
+.glass {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+/* Glow box on hover */
+.glow-hover {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 24px var(--glow-indigo), 0 0 4px var(--glow-indigo);
+  border-color: var(--border-2);
+}
+
+/* Shimmer button overlay */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+  animation: shimmer 2.5s ease infinite;
+}
+
+/* Floating profile image */
+.float-image {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Glowing cyan ring */
+.glow-ring {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Dot grid hero background */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(99, 102, 241, 0.18) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: grid-fade 6s ease-in-out infinite;
+}
+
+/* Section divider gradient line */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    var(--highlight),
+    transparent
+  );
+  opacity: 0.4;
+}
+
+/* Scrollbar progress bar at top */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--highlight));
+  z-index: 9999;
+  transform-origin: left;
+}
+
+/* Typewriter cursor */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--highlight);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
 }
