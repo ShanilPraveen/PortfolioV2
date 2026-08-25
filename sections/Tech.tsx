@@ -1,6 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { FaCode, FaCubes, FaTools } from 'react-icons/fa';
 
 const techCards = [
@@ -40,12 +40,12 @@ const techCards = [
 ];
 
 // Framer Motion variants
-const sectionVariants = {
+const sectionVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.15 } },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 40 },
   show:  { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
 };

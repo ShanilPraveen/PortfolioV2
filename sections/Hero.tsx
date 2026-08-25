@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { FaGithub, FaDownload, FaArrowRight } from 'react-icons/fa';
 import Particles from '@/components/Particles';
 
@@ -15,17 +15,17 @@ const ROLES = [
 ];
 
 // Framer Motion variants
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
   show:  { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
-const imageVariants = {
+const imageVariants: Variants = {
   hidden: { opacity: 0, scale: 0.85, x: 40 },
   show:  { opacity: 1, scale: 1,    x: 0,  transition: { duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 } },
 };
