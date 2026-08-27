@@ -1,20 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { motion, Variants } from 'framer-motion';
+import { motion, useMotionValue, useSpring, Variants } from 'motion/react';
 import { FaGithub, FaDownload, FaArrowRight } from 'react-icons/fa';
 import Particles from '@/components/Particles';
 
-const ROLES = [
-  'Full-Stack Developer',
-  'CS & Engineering Undergraduate',
-  'AI / ML Enthusiast',
-  'Cloud Computing Explorer',
-  'Open Source Contributor',
-];
-
-// Framer Motion variants
 const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
@@ -22,57 +12,72 @@ const containerVariants: Variants = {
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
-  show:  { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
 const imageVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.85, x: 40 },
-  show:  { opacity: 1, scale: 1,    x: 0,  transition: { duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 } },
+  hidden: { opacity: 0, scale: 0.94, x: 30 },
+  show: { opacity: 1, scale: 1, x: 0, transition: { duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 } },
 };
 
+
+function MagneticButton({ children, className, href, download }: {
+  children: React.ReactNode;
+  className: string;
+  href: string;
+  download?: boolean;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.2 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.2 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    const relX = e.clientX - (rect.left + rect.width / 2);
+    const relY = e.clientY - (rect.top + rect.height / 2);
+    x.set(relX * 0.25);
+    y.set(relY * 0.25);
+  };
+
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      download={download}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={reset}
+      style={{ x: springX, y: springY }}
+      className={className}
+    >
+      {children}
+    </motion.a>
+  );
+}
+
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayed, setDisplayed]  = useState('');
-  const [typing, setTyping]         = useState(true);
-
-  // Typewriter effect
-  useEffect(() => {
-    const target = ROLES[roleIndex];
-    let timeout: NodeJS.Timeout;
-
-    if (typing) {
-      if (displayed.length < target.length) {
-        timeout = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 55);
-      } else {
-        timeout = setTimeout(() => setTyping(false), 2000);
-      }
-    } else {
-      if (displayed.length > 0) {
-        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 28);
-      } else {
-        setTyping(true);
-        setRoleIndex((i) => (i + 1) % ROLES.length);
-      }
-    }
-    return () => clearTimeout(timeout);
-  }, [displayed, typing, roleIndex]);
-
   return (
     <section className="relative min-h-[calc(100vh-4rem)] flex items-center overflow-hidden">
 
       {/* ── Dot-grid background ── */}
       <div className="dot-grid absolute inset-0 pointer-events-none" />
 
-      {/* ── Canvas particles ── */}
-      <Particles count={70} className="z-0" />
+      {/* Canvas particles */}
+      <Particles count={200} className="z-0" />
 
       {/* ── Radial gradient spotlight at centre-left ── */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 70% 60% at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 70%)' }} />
 
-      {/* ── Content ── */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full py-16
-                      grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 container-content w-full py-16
+                      grid grid-cols-1 lg:grid-cols-[auto_auto] gap-8 lg:gap-40 items-center lg:justify-center">
 
         {/* ────────── LEFT — Text ────────── */}
         <motion.div
@@ -93,34 +98,34 @@ export default function Hero() {
           {/* Greeting + Name */}
           <motion.div variants={itemVariants} className="space-y-1">
             <p className="text-slate-400 text-lg font-medium">Hi there, I&apos;m</p>
-            <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight tracking-tight">
+            <h1
+              className="font-display font-bold leading-[0.98] tracking-tight"
+              style={{ fontSize: 'var(--text-display)' }}
+            >
               <span className="gradient-text">Shanil</span>
               <br />
               <span className="text-white">Praveen</span>
             </h1>
           </motion.div>
 
-          {/* Typewriter role */}
-          <motion.div variants={itemVariants} className="h-8 flex items-center">
-            <span className="text-xl font-semibold text-slate-300">
-              {displayed}
-            </span>
-            <span className="cursor ml-0.5" />
-          </motion.div>
+          <motion.p variants={itemVariants} className="text-xl font-semibold text-slate-300">
+            Full-Stack Developer &amp;{' '}
+            <span style={{ color: 'var(--accent-warm)' }}>AI/ML</span> Explorer
+          </motion.p>
 
           {/* Description */}
           <motion.p
             variants={itemVariants}
-            className="text-slate-400 text-base leading-relaxed max-w-lg"
+            className="text-slate-400 leading-relaxed max-w-lg"
+            style={{ fontSize: 'var(--text-body)' }}
           >
             Passionate about crafting elegant, performant web experiences and
             exploring the intersection of software engineering and intelligent systems.
-            Currently building &amp; learning at UoM.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons — magnetic pull on hover */}
           <motion.div variants={itemVariants} className="flex flex-wrap gap-4 pt-2">
-            <Link
+            <MagneticButton
               href="/projects"
               className="shimmer-btn group inline-flex items-center gap-2 px-6 py-3 rounded-xl
                          bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold
@@ -128,9 +133,9 @@ export default function Hero() {
             >
               View My Work
               <FaArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
+            </MagneticButton>
 
-            <a
+            <MagneticButton
               href="/cv.pdf"
               download
               className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl
@@ -140,11 +145,11 @@ export default function Hero() {
             >
               <FaDownload size={13} className="group-hover:-translate-y-0.5 transition-transform duration-200" />
               Download CV
-            </a>
+            </MagneticButton>
           </motion.div>
 
           {/* GitHub quick-link */}
-          <motion.div variants={itemVariants}>
+          {/* <motion.div variants={itemVariants}>
             <a
               href="https://github.com/ShanilPraveen"
               target="_blank"
@@ -154,76 +159,65 @@ export default function Hero() {
               <FaGithub size={15} />
               @ShanilPraveen
             </a>
-          </motion.div>
+          </motion.div> */}
         </motion.div>
 
-        {/* ────────── RIGHT — Profile photo ────────── */}
+    
         <motion.div
           variants={imageVariants}
           initial="hidden"
           animate="show"
-          className="order-1 lg:order-2 flex items-center justify-center"
+          className="order-1 lg:order-2 flex items-center justify-center lg:justify-end"
         >
-          <div className="relative">
-            {/* Outer slow-spinning decorative ring */}
+          <div className="relative w-[280px] h-[360px] sm:w-[320px] sm:h-[400px] lg:w-[440px] lg:h-[540px]">
+
+            {/* Ambient glow behind the whole cluster */}
             <div
-              className="absolute inset-0 rounded-full border border-indigo-500/20"
-              style={{
-                animation: 'spin-slow 18s linear infinite',
-                transform: 'scale(1.18)',
-              }}
-            >
-              {/* Small dot on the ring */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2
-                              w-2.5 h-2.5 rounded-full bg-indigo-400 shadow-lg shadow-indigo-400/80" />
+              className="absolute -inset-8 rounded-[2.5rem] pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 70%)' }}
+            />
+
+            {/* Background panel — me2.jpg, larger, set back top-right */}
+            <div className="absolute top-0 right-0 w-[72%] h-[70%] rounded-[1.1rem] overflow-hidden border border-white/10 shadow-xl shadow-black/40 z-10">
+              <Image
+                src="/images/me2.jpg"
+                alt=""
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 202px, 230px"
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(160deg, rgba(34,211,238,0.30) 0%, rgba(3,7,18,0.18) 50%, rgba(99,102,241,0.22) 100%)',
+                  mixBlendMode: 'color',
+                }}
+              />
+              <div className="absolute inset-0 bg-[#030712]/10" />
             </div>
 
-            {/* Second ring, counter-rotating */}
-            <div
-              className="absolute inset-0 rounded-full border border-cyan-500/15"
-              style={{
-                animation: 'spin-slow 26s linear infinite reverse',
-                transform: 'scale(1.35)',
-              }}
-            >
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2
-                              w-2 h-2 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/80" />
-            </div>
-
-            {/* Glow halo behind image */}
-            <div className="absolute inset-0 rounded-full"
-              style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.15) 0%, transparent 70%)' }} />
-
-            {/* Profile photo */}
-            <div className="float-image glow-ring relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72
-                            rounded-full overflow-hidden border-2 border-cyan-400/40">
+            {/* Foreground panel — me.jpg, primary portrait, front bottom-left */}
+            <div className="absolute bottom-0 left-0 w-[66%] h-[62%] rounded-[1.1rem] overflow-hidden border-2 border-[#030712] shadow-2xl shadow-black/50 z-20">
               <Image
                 src="/images/me.png"
                 alt="Shanil Praveen"
                 fill
                 className="object-cover object-top"
                 priority
-                sizes="(max-width: 640px) 224px, (max-width: 1024px) 256px, 288px"
+                sizes="(max-width: 640px) 185px, 211px"
               />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(160deg, rgba(99,102,241,0.28) 0%, rgba(3,7,18,0.10) 50%, rgba(34,211,238,0.18) 100%)',
+                  mixBlendMode: 'color',
+                }}
+              />
+              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#030712] via-[#030712]/25 to-transparent" />
             </div>
           </div>
         </motion.div>
       </div>
-
-      {/* ── Scroll hint ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-slate-600"
-      >
-        <span className="text-xs uppercase tracking-widest">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
-          className="w-px h-8 bg-gradient-to-b from-slate-600 to-transparent"
-        />
-      </motion.div>
     </section>
   );
 }
