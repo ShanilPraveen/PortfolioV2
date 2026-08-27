@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import DecryptedText from './DecryptedText';
 
@@ -47,21 +47,55 @@ export default function Navbar() {
             : 'bg-transparent'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="container-content h-16 flex items-center justify-between">
 
-          {/* Logo */}
+          {/* Logo — one-time draw-in on first load only (this component lives in
+              the root layout, so it mounts once and persists across route
+              changes rather than replaying on every navigation). The gradient
+              fill scales in first, then a thin border traces itself via
+              pathLength, then the "SP" letters fade in last. */}
           <Link href="/" className="group flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:shadow-indigo-500/60 transition-shadow duration-300">
-              <span className="text-white font-bold text-sm">SP</span>
-            </div>
+            <svg width="36" height="36" viewBox="0 0 36 36" className="shrink-0">
+              <defs>
+                <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#6366f1" />
+                  <stop offset="100%" stopColor="#22d3ee" />
+                </linearGradient>
+              </defs>
+              <motion.rect
+                x="1" y="1" width="34" height="34" rx="10"
+                fill="url(#logoGrad)"
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                style={{ transformOrigin: '50% 50%' }}
+              />
+              <motion.rect
+                x="1" y="1" width="34" height="34" rx="10"
+                fill="none" stroke="white" strokeOpacity={0.5} strokeWidth={1}
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+              />
+              <motion.text
+                x="18" y="23" textAnchor="middle"
+                fontSize="13" fontWeight={700} fill="white"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.55 }}
+              >
+                SP
+              </motion.text>
+            </svg>
             <DecryptedText
               text="Shanil Praveen"
               animateOn="hover"
               speed={40}
               sequential
               revealDirection="start"
-              className="hidden sm:block text-sm font-semibold text-slate-300 group-hover:text-white transition-colors"
-              encryptedClassName="hidden sm:block text-sm font-semibold text-indigo-400"
+              parentClassName="hidden sm:inline-block"
+              className="text-sm font-semibold text-slate-300 group-hover:text-white transition-colors"
+              encryptedClassName="text-sm font-semibold text-indigo-400"
             />
           </Link>
 
