@@ -13,6 +13,28 @@
   --muted:     #64748b;
   --glow-indigo: rgba(99, 102, 241, 0.4);
   --glow-cyan:   rgba(34, 211, 238, 0.35);
+
+  /* Warm accent — used sparingly (a handful of deliberate moments only:
+     an availability-status dot, a single highlighted word in a headline).
+     Indigo/cyan currently cover 100% of every accent in the UI, which
+     flattens hierarchy since nothing visually stands out from anything
+     else. This gives later phases a third color to create emphasis with,
+     without touching the overall dark indigo/cyan identity. Not applied
+     anywhere yet. */
+  --accent-warm: #fb923c;
+
+  /* ─── Fluid Type Scale ──────────────────────────────────────────────────
+     Replaces the ad-hoc `text-4xl sm:text-5xl` pairs repeated across every
+     page. Each size uses clamp(min, viewport-relative, max) so headline
+     size scales smoothly with the browser width instead of jumping at
+     Tailwind's fixed breakpoints. Apply as plain CSS (style/utility), not
+     as a Tailwind class, since these are custom values outside the
+     default scale. */
+  --text-display: clamp(2.75rem, 3rem + 3vw, 5.5rem);   /* hero name / biggest single statement */
+  --text-h1:      clamp(2.25rem, 2rem + 2.2vw, 3.5rem);  /* page titles */
+  --text-h2:      clamp(1.75rem, 1.5rem + 1.4vw, 2.5rem); /* section titles */
+  --text-body:    clamp(1rem, 0.95rem + 0.2vw, 1.125rem); /* lead paragraphs */
+  --text-caption: clamp(0.75rem, 0.72rem + 0.1vw, 0.875rem); /* eyebrow labels, meta text */
 }
 
 @theme inline {
@@ -36,6 +58,63 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+}
+
+/* ─── Layout Containers ──────────────────────────────────────────────────────
+   Replaces the old fixed `max-w-6xl`/`max-w-5xl mx-auto px-6` pattern that was
+   repeated across every page. That approach caps content at 1152px/1280px
+   regardless of viewport, which on large screens (1440px+) leaves oversized,
+   fixed dead gutters on both sides — the exact issue being fixed here.
+
+   Both classes use `clamp()` for the horizontal padding so it scales smoothly
+   with the viewport instead of jumping at breakpoints:
+     - Below ~625px viewport width: padding sits at the 1.25rem (20px) floor.
+     - Between ~625px and ~1600px: padding scales linearly at 4% of viewport width.
+     - Above ~1600px: padding is capped at the 4rem (64px) ceiling.
+
+   - `.container-content` is for text/card content — the "reading column".
+     Max-width raised from the old 1152px to 1400px, giving meaningfully more
+     room on large monitors while keeping body text at a comfortable line length.
+   - `.container-bleed` is for full-width elements — background art, imagery,
+     galleries — that should be allowed to use the full viewport width, with
+     only the same fluid inset so content doesn't touch the screen edge.
+   ────────────────────────────────────────────────────────────────────────── */
+.container-content {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 4rem);
+}
+
+.container-bleed {
+  width: 100%;
+  padding-inline: clamp(1.25rem, 4vw, 4rem);
+}
+
+/* ─── Typography ──────────────────────────────────────────────────────────
+   `.font-display` applies the Space Grotesk headline typeface. Pair with
+   the --text-* custom properties above (e.g. `style={{ fontSize:
+   'var(--text-h1)' }}`) when converting a heading during later phases —
+   not applied to any page yet, this just makes the font available. */
+.font-display {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* ─── Grain / Noise Texture ───────────────────────────────────────────────
+   Fixed, full-viewport, extremely low-opacity noise layer rendered from an
+   inline SVG <feTurbulence> data URI — no image request, no extra network
+   cost. `mix-blend-mode: overlay` lets it read as texture on top of
+   whatever's beneath rather than a visible layer of its own. Sits above
+   all content (`z-index: 9998`, just under the scroll-progress bar) and
+   never intercepts clicks (`pointer-events: none`). */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ─── Custom Scrollbar ───────────────────────────────────────────────────────── */
@@ -178,9 +257,26 @@ body {
   animation: glow-pulse 3s ease-in-out infinite;
 }
 
+/* Continuous horizontal marquee — used by the Tech section's logo strip.
+   Pure CSS (no JS animation library needed for a simple infinite scroll),
+   pauses on hover so users can read/click individual logos. The track
+   renders its children twice (handled in the component) and translates
+   exactly -50%, so the loop is seamless. */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
 /* Dot grid hero background */
 .dot-grid {
-  background-image: radial-gradient(circle, rgba(99, 102, 241, 0.18) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(99, 102, 241, 0.6) 1px, transparent 1px);
   background-size: 32px 32px;
   animation: grid-fade 6s ease-in-out infinite;
 }
@@ -218,4 +314,19 @@ body {
   margin-left: 2px;
   vertical-align: middle;
   animation: blink 1s step-end infinite;
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────────────────────
+   Applies site-wide: every CSS keyframe animation collapses to effectively
+   static for users who've asked the OS/browser to minimize motion. Motion
+   (the JS library) animations are handled separately per-component via
+   `useReducedMotion()` where relevant in later phases — this covers the
+   pure-CSS animations defined above (marquee, shimmer, float, glow, etc). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
