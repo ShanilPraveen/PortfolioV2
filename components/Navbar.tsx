@@ -49,11 +49,7 @@ export default function Navbar() {
       >
         <div className="container-content h-16 flex items-center justify-between">
 
-          {/* Logo — one-time draw-in on first load only (this component lives in
-              the root layout, so it mounts once and persists across route
-              changes rather than replaying on every navigation). The gradient
-              fill scales in first, then a thin border traces itself via
-              pathLength, then the "SP" letters fade in last. */}
+          
           <Link href="/" className="group flex items-center gap-2">
             <svg width="36" height="36" viewBox="0 0 36 36" className="shrink-0">
               <defs>

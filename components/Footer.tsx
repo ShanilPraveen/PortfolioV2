@@ -24,12 +24,6 @@ const socials = [
     color: 'hover:bg-[#0A66C2] hover:border-[#0A66C2]',
   },
   {
-    label: 'Kaggle',
-    href: 'https://kaggle.com/shanilpraveen',
-    icon: FaKaggle,
-    color: 'hover:bg-[#20BEFF] hover:border-[#20BEFF]',
-  },
-  {
     label: 'Medium',
     href: 'https://medium.com/@jspraveen2002',
     icon: FaMedium,
@@ -47,12 +41,15 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-20 border-t border-[rgba(99,102,241,0.15)]">
+    <footer className="relative mt-20 border-t border-[rgba(99,102,241,0.15)] overflow-hidden">
       {/* Top gradient fade */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
 
-      <div className="bg-[#030712]">
-        <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="relative bg-[#030712]">
+        
+        <div className="dot-grid absolute inset-0 pointer-events-none" />
+
+        <div className="relative z-10 container-content py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
 
           {/* ── Column 1: Brand & Contact ── */}
           <div className="space-y-4">
@@ -118,14 +115,14 @@ export default function Footer() {
             </div>
 
             <p className="text-slate-500 text-xs leading-relaxed">
-              Open to collaborations, internships, and interesting conversations.
+              Open to collaborations and interesting conversations.
             </p>
           </div>
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="border-t border-white/5">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        {/* <div className="relative z-10 border-t border-white/5">
+          <div className="container-content py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-slate-500 text-xs">
               © {year} Shanil Praveen. All rights reserved.
             </p>
@@ -133,7 +130,7 @@ export default function Footer() {
               Built with <FaHeart size={10} className="text-indigo-400 mx-0.5" /> using Next.js & Tailwind CSS
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </footer>
   );
