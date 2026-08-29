@@ -1,7 +1,7 @@
 'use client';
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { FaBookOpen, FaArrowRight } from 'react-icons/fa';
 import { Blog } from '@/types';
 
@@ -33,7 +33,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
       onMouseLeave={handleMouseLeave}
       whileHover={{ y: -6, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="relative group rounded-2xl border border-white/5 bg-[#0d1424] overflow-hidden cursor-default"
+      className="relative group h-full flex flex-col rounded-2xl border border-white/5 bg-[#0d1424] overflow-hidden cursor-default"
       style={{ isolation: 'isolate' }}
     >
       {/* ── Spotlight glow (cyan for blogs) ── */}
@@ -51,8 +51,8 @@ export default function BlogCard({ blog }: BlogCardProps) {
         style={{ boxShadow: 'inset 0 0 0 1px rgba(34,211,238,0.35)' }}
       />
 
-      {/* ── Blog image ── */}
-      <div className="relative w-full h-44 overflow-hidden">
+      {/* ── Blog image — fixed height, same on every card ── */}
+      <div className="relative w-full h-44 shrink-0 overflow-hidden">
         {blog.imageUrl ? (
           <Image
             src={blog.imageUrl}
@@ -77,20 +77,24 @@ export default function BlogCard({ blog }: BlogCardProps) {
         </div>
       </div>
 
-      {/* ── Content ── */}
-      <div className="relative z-20 p-5 space-y-3">
+      {/* ── Content ──
+          Same `flex-1` + `mt-auto` pattern as ProjectCard: the "Read more"
+          footer is pinned to the bottom regardless of description length,
+          and the marquee track's flex-row stretch equalizes overall card
+          height across the whole strip. ── */}
+      <div className="relative z-20 p-5 flex-1 flex flex-col">
         {/* Title */}
         <h3 className="text-white font-semibold text-lg leading-tight group-hover:text-cyan-300 transition-colors duration-300 line-clamp-2">
           {blog.title}
         </h3>
 
         {/* Description */}
-        <p className="text-slate-400 text-sm leading-relaxed line-clamp-3">
+        <p className="text-slate-400 text-sm leading-relaxed line-clamp-3 mt-3">
           {blog.description}
         </p>
 
         {/* Read more indicator */}
-        <div className="pt-1 flex items-center gap-2 text-sm font-medium text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
+        <div className="mt-auto pt-3 flex items-center gap-2 text-sm font-medium text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
           <FaBookOpen size={13} />
           <span>Read more</span>
           <FaArrowRight
