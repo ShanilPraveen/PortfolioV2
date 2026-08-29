@@ -1,63 +1,29 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { FaChevronLeft, FaChevronRight, FaArrowRight } from 'react-icons/fa';
+import { motion } from 'motion/react';
+import { FaArrowRight } from 'react-icons/fa';
 import { fetchBlogs } from '@/lib/api';
 import { Blog } from '@/types';
 import BlogCard from '@/components/BlogCard';
-
-const ITEMS_PER_PAGE_DESKTOP = 3;
-const ITEMS_PER_PAGE_MOBILE  = 1;
+import CardMarquee from '@/components/CardMarquee';
 
 export default function Blogs() {
-  const [blogs, setBlogs]         = useState<Blog[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [page, setPage]           = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [isMobile, setIsMobile]   = useState(false);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBlogs().then((data) => { setBlogs(data); setLoading(false); });
   }, []);
 
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
-  const perPage = isMobile ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
-  const total   = Math.ceil(blogs.length / perPage);
-  const slice   = blogs.slice(page * perPage, page * perPage + perPage);
-
-  const prev = () => {
-    if (page === 0) return;
-    setDirection(-1);
-    setPage((p) => p - 1);
-  };
-
-  const next = () => {
-    if (page >= total - 1) return;
-    setDirection(1);
-    setPage((p) => p + 1);
-  };
-
-  const slideVariants: Variants = {
-    enter:  (d: number) => ({ opacity: 0, x: d > 0 ? 60 : -60 }),
-    center: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] } },
-    exit:   (d: number) => ({ opacity: 0, x: d > 0 ? -60 : 60, transition: { duration: 0.3 } }),
-  };
-
   return (
-    <section className="relative py-24 px-6 overflow-hidden">
+    <section className="relative py-24 overflow-hidden">
       {/* Subtle background radial — cyan tint */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 20% 80%, rgba(34,211,238,0.05) 0%, transparent 60%)' }}
       />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="container-content relative z-10">
 
         {/* ── Heading ── */}
         <motion.div
@@ -69,7 +35,7 @@ export default function Blogs() {
         >
           <div className="space-y-2">
             <p className="text-cyan-400 text-sm font-semibold uppercase tracking-widest">Writing</p>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white">
+            <h2 className="font-display font-bold text-white" style={{ fontSize: 'var(--text-h1)' }}>
               Featured{' '}
               <span className="gradient-text">Blogs</span>
             </h2>
@@ -89,14 +55,13 @@ export default function Blogs() {
 
         {/* ── Loading skeleton ── */}
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[0, 1, 2].map((i) => (
               <div key={i} className="rounded-2xl bg-[#0d1424] border border-white/5 overflow-hidden animate-pulse">
                 <div className="h-44 bg-white/5" />
                 <div className="p-5 space-y-3">
                   <div className="h-4 bg-white/5 rounded w-3/4" />
                   <div className="h-3 bg-white/5 rounded w-full" />
-                  <div className="h-3 bg-white/5 rounded w-1/2" />
                 </div>
               </div>
             ))}
@@ -110,72 +75,15 @@ export default function Blogs() {
           </div>
         )}
 
-        {/* ── Carousel ── */}
+        {/* ── Continuous card marquee — every post as an equal-height
+            card, scrolling left forever and pausing on hover, the same
+            treatment as the Tech section's logo strip. ── */}
         {!loading && blogs.length > 0 && (
-          <div className="space-y-6">
-            <div className="relative overflow-hidden min-h-[340px] flex items-start">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={page}
-                  custom={direction}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full"
-                >
-                  {slice.map((blog) => (
-                    <BlogCard key={blog._id} blog={blog} />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Controls */}
-            {total > 1 && (
-              <div className="flex items-center justify-between">
-                {/* Dot indicators — cyan theme */}
-                <div className="flex gap-2">
-                  {Array.from({ length: total }).map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setDirection(i > page ? 1 : -1); setPage(i); }}
-                      className={`rounded-full transition-all duration-300 ${
-                        i === page
-                          ? 'w-6 h-2 bg-cyan-500'
-                          : 'w-2 h-2 bg-white/20 hover:bg-white/40'
-                      }`}
-                      aria-label={`Go to slide ${i + 1}`}
-                    />
-                  ))}
-                </div>
-
-                {/* Prev / Next */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={prev}
-                    disabled={page === 0}
-                    className="w-9 h-9 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center
-                               text-slate-400 hover:text-white hover:border-cyan-500/40 hover:bg-cyan-500/10
-                               disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
-                    aria-label="Previous"
-                  >
-                    <FaChevronLeft size={12} />
-                  </button>
-                  <button
-                    onClick={next}
-                    disabled={page >= total - 1}
-                    className="w-9 h-9 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center
-                               text-slate-400 hover:text-white hover:border-cyan-500/40 hover:bg-cyan-500/10
-                               disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
-                    aria-label="Next"
-                  >
-                    <FaChevronRight size={12} />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          <CardMarquee
+            items={blogs}
+            getKey={(b) => b._id}
+            renderCard={(b) => <BlogCard blog={b} />}
+          />
         )}
 
         {/* ── View all CTA ── */}
