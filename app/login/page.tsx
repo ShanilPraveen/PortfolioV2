@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { FaLock, FaUser } from 'react-icons/fa';
 import { loginAdmin } from '@/lib/api';
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
     'w-full pl-11 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200';
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-16 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center py-16 overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -50,7 +50,13 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
             <FaLock size={18} className="text-white" />
           </div>
-          <h1 className="text-white font-bold text-xl">Admin Login</h1>
+          <p className="text-indigo-400 text-xs font-semibold uppercase tracking-widest">Admin Portal</p>
+          <h1
+            className="text-white font-bold"
+            style={{ fontSize: 'var(--text-h3)' }}
+          >
+            Admin Login
+          </h1>
           <p className="text-slate-500 text-sm">Sign in to manage your portfolio</p>
         </div>
 

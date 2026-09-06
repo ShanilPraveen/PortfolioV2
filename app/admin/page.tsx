@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   FiPlusCircle,
   FiTrash2,
@@ -104,14 +104,14 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="relative py-16 px-6 min-h-screen overflow-hidden">
+    <div className="relative py-16 min-h-screen overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%)' }}
       />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="container-content relative z-10">
         {/* ── Header ── */}
         <motion.div
           initial={{ y: -24, opacity: 0 }}
@@ -120,7 +120,11 @@ export default function AdminPage() {
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10"
         >
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
+            <p className="text-indigo-400 text-xs font-semibold uppercase tracking-widest mb-1">Dashboard</p>
+            <h1
+              className="font-extrabold text-white"
+              style={{ fontSize: 'var(--text-h1)' }}
+            >
               Welcome, <span className="gradient-text">Shanil</span>!
             </h1>
             <p className="text-slate-400 text-sm mt-1">Manage your projects and blogs</p>
