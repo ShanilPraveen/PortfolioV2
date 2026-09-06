@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   FaGithub,
   FaLinkedin,
@@ -54,14 +54,14 @@ export default function ContactPage() {
     'w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200';
 
   return (
-    <div className="relative py-20 px-6 overflow-hidden min-h-screen">
+    <div className="relative py-20 overflow-hidden min-h-screen">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%)' }}
       />
 
-      <div className="max-w-5xl mx-auto relative z-10">
+      <div className="container-content relative z-10">
         {/* ── Heading ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -81,6 +81,36 @@ export default function ContactPage() {
           <p className="text-slate-400 text-base max-w-xl mx-auto leading-relaxed">
             Have a project in mind or just want to say hello? Feel free to reach out!
           </p>
+        </motion.div>
+
+        {/* ── Availability indicator ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25, ease: 'easeOut' }}
+          className="flex justify-center mb-10"
+        >
+          <div
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-sm font-medium"
+            style={{
+              borderColor: 'color-mix(in srgb, var(--accent-warm) 30%, transparent)',
+              background: 'color-mix(in srgb, var(--accent-warm) 8%, transparent)',
+              color: 'var(--accent-warm)',
+            }}
+          >
+            {/* Pulsing dot */}
+            <span className="relative flex h-2 w-2">
+              <span
+                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                style={{ backgroundColor: 'var(--accent-warm)' }}
+              />
+              <span
+                className="relative inline-flex rounded-full h-2 w-2"
+                style={{ backgroundColor: 'var(--accent-warm)' }}
+              />
+            </span>
+            Open to internships &amp; collaborations
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">

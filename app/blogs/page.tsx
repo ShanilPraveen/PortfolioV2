@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'motion/react';
 import { IoNewspaperSharp } from 'react-icons/io5';
 import { fetchBlogs } from '@/lib/api';
 import { Blog } from '@/types';
@@ -28,14 +28,14 @@ export default function BlogsPage() {
   }, []);
 
   return (
-    <div className="relative py-20 px-6 overflow-hidden min-h-screen">
+    <div className="relative py-20 overflow-hidden min-h-screen">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(34,211,238,0.06) 0%, transparent 60%)' }}
       />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="container-content relative z-10">
         {/* ── Heading ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
