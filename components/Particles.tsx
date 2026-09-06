@@ -15,6 +15,7 @@ interface Particle {
 interface ParticlesProps {
   count?: number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const COLORS = [
@@ -24,7 +25,7 @@ const COLORS = [
   'rgba(167, 139, 250,',  // lavender
 ];
 
-export default function Particles({ count = 80, className = '' }: ParticlesProps) {
+export default function Particles({ count = 80, className = '', style }: ParticlesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: -9999, y: -9999 });
   const animRef = useRef<number>(0);
@@ -147,6 +148,7 @@ export default function Particles({ count = 80, className = '' }: ParticlesProps
     <canvas
       ref={canvasRef}
       className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
+      style={style}
     />
   );
 }
