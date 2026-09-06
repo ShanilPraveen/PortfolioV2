@@ -1,10 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'motion/react';
 import { FaLaptopCode } from 'react-icons/fa';
 import { fetchProjects } from '@/lib/api';
 import { Project } from '@/types';
 import ProjectCard from '@/components/ProjectCard';
+import ProjectDetailModal from '@/components/ProjectDetailModal';
 
 const containerVariants: Variants = {
   hidden: {},
@@ -19,6 +20,7 @@ const cardVariants: Variants = {
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   useEffect(() => {
     fetchProjects().then((data) => {
@@ -28,14 +30,14 @@ export default function ProjectsPage() {
   }, []);
 
   return (
-    <div className="relative py-20 px-6 overflow-hidden min-h-screen">
+    <div className="relative py-20 overflow-hidden min-h-screen">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%)' }}
       />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="container-content relative z-10">
         {/* ── Heading ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -92,12 +94,20 @@ export default function ProjectsPage() {
           >
             {projects.map((project) => (
               <motion.div key={project._id} variants={cardVariants}>
-                <ProjectCard project={project} />
+                <ProjectCard
+                  project={project}
+                  onClick={() => setSelectedProject(project)}
+                />
               </motion.div>
             ))}
           </motion.div>
         )}
       </div>
+
+      <ProjectDetailModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </div>
   );
 }

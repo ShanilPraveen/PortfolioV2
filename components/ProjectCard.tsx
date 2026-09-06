@@ -7,9 +7,10 @@ import { Project } from '@/types';
 
 interface ProjectCardProps {
   project: Project;
+  onClick?: () => void;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, onClick }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [spotlight, setSpotlight] = useState({ x: 0, y: 0, opacity: 0 });
 
@@ -33,10 +34,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
       whileHover={{ y: -6, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="relative group h-full flex flex-col rounded-2xl border border-white/5 bg-[#0d1424] overflow-hidden cursor-default"
+      className="relative group h-full flex flex-col rounded-2xl border border-white/5 bg-[#0d1424] overflow-hidden cursor-pointer"
       style={{ isolation: 'isolate' }}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); } : undefined}
     >
       {/* ── Spotlight glow ── */}
       <div
@@ -113,18 +118,26 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             </div>
           )}
 
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors duration-200 group/link"
-            >
-              <FaGithub size={14} className="group-hover/link:rotate-12 transition-transform duration-200" />
-              View on GitHub
-              <FaExternalLinkAlt size={10} className="opacity-0 group-hover/link:opacity-100 -translate-x-1 group-hover/link:translate-x-0 transition-all duration-200" />
-            </a>
-          )}
+          <div className="flex items-center justify-between gap-2">
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-indigo-400 transition-colors duration-200 group/link"
+              >
+                <FaGithub size={14} className="group-hover/link:rotate-12 transition-transform duration-200" />
+                GitHub
+                <FaExternalLinkAlt size={10} className="opacity-0 group-hover/link:opacity-100 -translate-x-1 group-hover/link:translate-x-0 transition-all duration-200" />
+              </a>
+            )}
+            {onClick && (
+              <span className="text-xs font-medium text-slate-500 group-hover:text-indigo-400 transition-colors duration-200 opacity-0 group-hover:opacity-100">
+                View details &#8594;
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
