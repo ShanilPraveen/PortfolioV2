@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'motion/react';
 import {
   FaBook,
   FaCode,
@@ -130,14 +130,14 @@ function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: st
 
 export default function AboutPage() {
   return (
-    <div className="relative py-20 px-6 overflow-hidden">
+    <div className="relative py-20 overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%)' }}
       />
 
-      <div className="max-w-5xl mx-auto relative z-10">
+      <div className="container-content relative z-10">
 
         {/* ── Page heading ── */}
         <motion.div
