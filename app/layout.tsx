@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
+import { SiteSettingsProvider } from '@/context/SiteSettingsContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -51,25 +52,27 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body>
-        {/* Fixed full-viewport grain texture — a subtle, low-opacity noise
-            overlay that sits above all page content. This is a single,
-            cheap addition (one static SVG data-URI, no animation, no per-
-            page cost) that separates a "designed" surface from a flat
-            gradient background. mix-blend-mode: overlay lets it interact
-            with whatever color is underneath rather than just darkening it. */}
-        <div className="grain-overlay" aria-hidden="true" />
+        <SiteSettingsProvider>
+          {/* Fixed full-viewport grain texture — a subtle, low-opacity noise
+              overlay that sits above all page content. This is a single,
+              cheap addition (one static SVG data-URI, no animation, no per-
+              page cost) that separates a "designed" surface from a flat
+              gradient background. mix-blend-mode: overlay lets it interact
+              with whatever color is underneath rather than just darkening it. */}
+          <div className="grain-overlay" aria-hidden="true" />
 
-        {/* Scroll progress indicator at the very top */}
-        <ScrollProgress />
+          {/* Scroll progress indicator at the very top */}
+          <ScrollProgress />
 
-        {/* Sticky navigation */}
-        <Navbar />
+          {/* Sticky navigation */}
+          <Navbar />
 
-        {/* Page content */}
-        <main>{children}</main>
+          {/* Page content */}
+          <main>{children}</main>
 
-        {/* Footer */}
-        <Footer />
+          {/* Footer */}
+          <Footer />
+        </SiteSettingsProvider>
       </body>
     </html>
   );

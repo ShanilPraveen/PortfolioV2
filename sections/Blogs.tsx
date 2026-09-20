@@ -7,14 +7,26 @@ import { fetchBlogs } from '@/lib/api';
 import { Blog } from '@/types';
 import BlogCard from '@/components/BlogCard';
 import CardMarquee from '@/components/CardMarquee';
+import { useSettings } from '@/context/SiteSettingsContext';
 
 export default function Blogs() {
+  const { blogsVisible, loading: settingsLoading } = useSettings();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBlogs().then((data) => { setBlogs(data); setLoading(false); });
-  }, []);
+    if (!settingsLoading && blogsVisible) {
+      fetchBlogs().then((data) => {
+        setBlogs(data);
+        setLoading(false);
+      });
+    }
+  }, [settingsLoading, blogsVisible]);
+
+  // Hide the entire Blogs section from homepage when disabled
+  if (settingsLoading || !blogsVisible) {
+    return null;
+  }
 
   return (
     <section className="relative py-24 overflow-hidden">

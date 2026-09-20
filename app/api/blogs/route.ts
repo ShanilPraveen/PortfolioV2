@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cacheTag, cacheLife, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
 
-// GET /api/blogs — fetch all blogs, newest first
+// Cached data-fetching function — defined OUTSIDE route handlers
+async function getBlogsFromDB() {
+  'use cache';
+  cacheTag('blogs');
+  cacheLife('minutes');
+
+  await connectDB();
+  const blogs = await Blog.find().sort({ _id: -1 }).lean();
+  return JSON.parse(JSON.stringify(blogs));
+}
+
+// GET /api/blogs — fetch all blogs, newest first (cached)
 export async function GET() {
   try {
-    await connectDB();
-    const blogs = await Blog.find().sort({ _id: -1 });
+    const blogs = await getBlogsFromDB();
     return NextResponse.json(blogs, { status: 200 });
   } catch (error) {
     console.error('Error fetching blogs:', error);
@@ -70,6 +81,7 @@ export async function POST(request: NextRequest) {
     });
 
     const savedBlog = await newBlog.save();
+    revalidateTag('blogs', 'max');
     return NextResponse.json(savedBlog, { status: 201 });
 
   } catch (error) {

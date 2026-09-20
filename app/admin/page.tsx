@@ -9,11 +9,15 @@ import {
   FiFolder,
   FiBookOpen,
   FiLogOut,
+  FiEye,
+  FiEyeOff,
+  FiLoader,
 } from 'react-icons/fi';
 import { fetchProjects, fetchBlogs, deleteProject, deleteBlog } from '@/lib/api';
 import { Project, Blog } from '@/types';
 import ProjectModal from '@/components/ProjectModal';
 import BlogModal from '@/components/BlogModal';
+import { useSettings } from '@/context/SiteSettingsContext';
 
 type Tab = 'projects' | 'blogs';
 
@@ -21,6 +25,10 @@ export default function AdminPage() {
   const router = useRouter();
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const { blogsVisible, loading: settingsLoading, updateBlogsVisible } = useSettings();
+  const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -80,6 +88,20 @@ export default function AdminPage() {
       console.error('Failed to delete blog:', err);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleToggleBlogs = async () => {
+    if (settingsLoading || isUpdatingSettings) return;
+    setIsUpdatingSettings(true);
+    setSettingsError(null);
+    try {
+      await updateBlogsVisible(!blogsVisible);
+    } catch (err) {
+      console.error('Failed to toggle blogs visibility:', err);
+      setSettingsError('Failed to update setting. Please try again.');
+    } finally {
+      setIsUpdatingSettings(false);
     }
   };
 
@@ -160,6 +182,85 @@ export default function AdminPage() {
           >
             <FiPlusCircle size={16} /> Add Blog
           </button>
+        </motion.div>
+
+        {/* ── Site Settings ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.4 }}
+          className="rounded-2xl border border-white/5 bg-[#0d1424] p-5 sm:p-6 mb-8"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div
+                className={`p-2.5 rounded-xl border transition-colors ${
+                  blogsVisible
+                    ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400'
+                    : 'bg-white/5 border-white/5 text-slate-400'
+                }`}
+              >
+                {blogsVisible ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-white font-semibold text-sm sm:text-base">
+                    Blogs Page Visibility
+                  </h3>
+                  {settingsLoading ? (
+                    <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-white/5 text-slate-400">
+                      Loading…
+                    </span>
+                  ) : (
+                    <span
+                      className={`text-[11px] font-medium px-2 py-0.5 rounded-full border ${
+                        blogsVisible
+                          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                          : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+                      }`}
+                    >
+                      {blogsVisible ? 'Visible to visitors' : 'Hidden from visitors'}
+                    </span>
+                  )}
+                </div>
+                <p className="text-slate-400 text-xs mt-0.5">
+                  {blogsVisible
+                    ? 'The Blogs page and navigation links are currently public and visible to visitors.'
+                    : 'The Blogs page is hidden and navigation links are omitted across the site.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Toggle Switch */}
+            <div className="flex items-center gap-3 self-end sm:self-center">
+              {isUpdatingSettings && (
+                <FiLoader className="animate-spin text-indigo-400" size={16} />
+              )}
+              <button
+                type="button"
+                role="switch"
+                aria-checked={blogsVisible}
+                aria-label="Toggle blogs page visibility"
+                disabled={settingsLoading || isUpdatingSettings}
+                onClick={handleToggleBlogs}
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  blogsVisible ? 'bg-indigo-600' : 'bg-slate-700'
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    blogsVisible ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {settingsError && (
+            <p className="text-xs text-rose-400 mt-3 pt-3 border-t border-white/5">
+              {settingsError}
+            </p>
+          )}
         </motion.div>
 
         {/* ── Tabs ── */}

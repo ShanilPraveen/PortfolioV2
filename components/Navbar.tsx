@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import DecryptedText from './DecryptedText';
+import { useSettings } from '@/context/SiteSettingsContext';
 
 const navLinks = [
   { label: 'Home',     href: '/' },
@@ -18,6 +19,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { blogsVisible, loading } = useSettings();
+
+  // Hide blogs link only when loaded and explicitly not visible
+  const visibleLinks = navLinks.filter(
+    (link) => link.href !== '/blogs' || blogsVisible || loading
+  );
 
   // Darken/blur navbar on scroll
   useEffect(() => {
@@ -97,7 +104,7 @@ export default function Navbar() {
 
           {/* Desktop links */}
           <ul className="hidden md:flex items-center gap-1">
-            {navLinks.map(({ label, href }) => {
+            {visibleLinks.map(({ label, href }) => {
               const isActive = pathname === href;
               return (
                 <li key={href}>
@@ -178,7 +185,7 @@ export default function Navbar() {
 
             {/* Links */}
             <nav className="flex flex-col items-center justify-center flex-1 gap-2 pb-20">
-              {navLinks.map(({ label, href }, i) => {
+              {visibleLinks.map(({ label, href }, i) => {
                 const isActive = pathname === href;
                 return (
                   <motion.div
@@ -206,7 +213,7 @@ export default function Navbar() {
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: navLinks.length * 0.07 + 0.05, duration: 0.35 }}
+                transition={{ delay: visibleLinks.length * 0.07 + 0.05, duration: 0.35 }}
                 className="mt-6"
               >
                 <Link

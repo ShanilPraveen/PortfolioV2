@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Project from '@/models/Project';
 import { verifyToken } from '@/lib/auth';
@@ -17,6 +18,8 @@ export async function DELETE(
 
     await connectDB();
     await Project.findByIdAndDelete(id);
+
+    revalidateTag('projects', 'max');
 
     return NextResponse.json(
       { message: 'Project deleted successfully' },

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 import { verifyToken } from '@/lib/auth';
@@ -17,6 +18,8 @@ export async function DELETE(
 
     await connectDB();
     await Blog.findByIdAndDelete(id);
+
+    revalidateTag('blogs', 'max');
 
     return NextResponse.json(
       { message: 'Blog deleted successfully' },

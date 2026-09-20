@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cacheTag, cacheLife, revalidateTag } from 'next/cache';
 import { connectDB } from '@/lib/mongodb';
 import Project from '@/models/Project';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
 
-// GET /api/projects — fetch all projects, newest first
+// Cached data-fetching function — defined OUTSIDE route handlers
+async function getProjectsFromDB() {
+  'use cache';
+  cacheTag('projects');
+  cacheLife('minutes');
+
+  await connectDB();
+  const projects = await Project.find().sort({ _id: -1 }).lean();
+  return JSON.parse(JSON.stringify(projects));
+}
+
+// GET /api/projects — fetch all projects, newest first (cached)
 export async function GET() {
   try {
-    await connectDB();
-    const projects = await Project.find().sort({ _id: -1 });
+    const projects = await getProjectsFromDB();
     return NextResponse.json(projects, { status: 200 });
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -79,6 +90,7 @@ export async function POST(request: NextRequest) {
     });
 
     const savedProject = await newProject.save();
+    revalidateTag('projects', 'max');
     return NextResponse.json(savedProject, { status: 201 });
 
   } catch (error) {
