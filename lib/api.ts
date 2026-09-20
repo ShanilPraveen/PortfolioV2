@@ -1,4 +1,4 @@
-import { Project, Blog } from '@/types';
+import { Project, Blog, SiteSettings } from '@/types';
 
 // All API routes are in the same Next.js app — no need for a full URL
 const API_BASE_URL = '/api';
@@ -149,3 +149,38 @@ export const sendEmail = async (data: {
     throw new Error(json.error || 'Failed to send email');
   }
 };
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+export const getSettings = async (): Promise<SiteSettings> => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/settings`);
+    if (!res.ok) throw new Error('Failed to fetch settings');
+    return res.json();
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    return { blogsVisible: false };
+  }
+};
+
+export const updateSettings = async (patch: Partial<SiteSettings>): Promise<SiteSettings> => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No token found');
+
+  const res = await fetch(`${API_BASE_URL}/settings`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(patch),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to update settings');
+  }
+
+  return res.json();
+};
+

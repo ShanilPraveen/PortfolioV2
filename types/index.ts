@@ -15,3 +15,8 @@ export interface Blog {
   description: string;
   imageUrl: string;
 }
+
+export interface SiteSettings {
+  blogsVisible: boolean;
+}
+
