@@ -13,6 +13,7 @@ import {
   FaMusic,
   FaImages,
 } from 'react-icons/fa';
+import LightRays from '@/components/LightRays';
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -131,10 +132,28 @@ function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: st
 export default function AboutPage() {
   return (
     <div className="relative py-20 overflow-hidden">
+      {/* ── Spotlight Light Rays Effect ── */}
+      <div className="absolute top-0 left-0 right-0 h-[620px] pointer-events-none z-0 overflow-hidden [mask-image:radial-gradient(ellipse_80%_70%_at_50%_0%,black_40%,transparent_100%)]">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#38bdf8"
+          raysSpeed={0.8}
+          lightSpread={0.65}
+          rayLength={2.8}
+          followMouse={true}
+          mouseInfluence={0.08}
+          noiseAmount={0.01}
+          distortion={0.04}
+          fadeDistance={1.2}
+          saturation={1.3}
+          className="opacity-80"
+        />
+      </div>
+
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.07) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(56,189,248,0.06) 0%, transparent 60%)' }}
       />
 
       <div className="container-content relative z-10">
