@@ -1,10 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, Variants } from 'motion/react';
 import { IoNewspaperSharp } from 'react-icons/io5';
 import { fetchBlogs } from '@/lib/api';
 import { Blog } from '@/types';
 import BlogCard from '@/components/BlogCard';
+import { useSettings } from '@/context/SiteSettingsContext';
 
 const containerVariants: Variants = {
   hidden: {},
@@ -17,15 +19,29 @@ const cardVariants: Variants = {
 };
 
 export default function BlogsPage() {
+  const router = useRouter();
+  const { blogsVisible, loading: settingsLoading } = useSettings();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBlogs().then((data) => {
-      setBlogs(data);
-      setLoading(false);
-    });
-  }, []);
+    if (!settingsLoading && !blogsVisible) {
+      router.replace('/');
+      return;
+    }
+
+    if (!settingsLoading && blogsVisible) {
+      fetchBlogs().then((data) => {
+        setBlogs(data);
+        setLoading(false);
+      });
+    }
+  }, [settingsLoading, blogsVisible, router]);
+
+  // If blogs are disabled, return null while redirecting
+  if (!settingsLoading && !blogsVisible) {
+    return null;
+  }
 
   return (
     <div className="relative py-20 overflow-hidden min-h-screen">
@@ -58,7 +74,7 @@ export default function BlogsPage() {
         </motion.div>
 
         {/* ── Loading skeleton ── */}
-        {loading && (
+        {(loading || settingsLoading) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[0, 1, 2, 3].map((i) => (
               <div key={i} className="rounded-2xl bg-[#0d1424] border border-white/5 overflow-hidden animate-pulse">
@@ -74,7 +90,7 @@ export default function BlogsPage() {
         )}
 
         {/* ── Empty state ── */}
-        {!loading && blogs.length === 0 && (
+        {!loading && !settingsLoading && blogs.length === 0 && (
           <div className="text-center py-24 text-slate-500">
             <IoNewspaperSharp size={40} className="mx-auto mb-4 text-slate-600" />
             <p className="text-lg">No blogs yet — coming soon!</p>
@@ -82,7 +98,7 @@ export default function BlogsPage() {
         )}
 
         {/* ── Grid ── */}
-        {!loading && blogs.length > 0 && (
+        {!loading && !settingsLoading && blogs.length > 0 && (
           <motion.div
             variants={containerVariants}
             initial="hidden"

@@ -1,6 +1,8 @@
+'use client';
 import Link from 'next/link';
 import { FaGithub, FaLinkedin, FaFacebook, FaKaggle, FaMedium, FaHeart } from 'react-icons/fa';
 import { IoIosMail } from 'react-icons/io';
+import { useSettings } from '@/context/SiteSettingsContext';
 
 const quickLinks = [
   { label: 'Home',     href: '/' },
@@ -39,6 +41,11 @@ const socials = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { blogsVisible, loading } = useSettings();
+
+  const visibleQuickLinks = quickLinks.filter(
+    (link) => link.href !== '/blogs' || blogsVisible || loading
+  );
 
   return (
     <footer className="relative mt-20 border-t border-[rgba(99,102,241,0.15)] overflow-hidden">
@@ -80,7 +87,7 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-2">
-              {quickLinks.map(({ label, href }) => (
+              {visibleQuickLinks.map(({ label, href }) => (
                 <li key={href}>
                   <Link
                     href={href}
