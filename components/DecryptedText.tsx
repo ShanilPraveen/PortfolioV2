@@ -111,6 +111,7 @@ export default function DecryptedText({
         }
 
         if (isHovering) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsScrambling(true)
             interval = setInterval(() => {
                 setRevealedIndices((prevRevealed) => {

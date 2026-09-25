@@ -112,6 +112,7 @@ export default function MemoryModal({ isOpen, onClose, onMemoryAdded }: MemoryMo
               >
                 {preview ? (
                   <div className="relative w-full h-56 sm:h-64 flex items-center justify-center bg-black/40">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={preview}
                       alt="Memory preview"

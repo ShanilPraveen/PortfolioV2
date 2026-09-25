@@ -11,7 +11,7 @@ async function getSettingsFromDB() {
   cacheLife('hours');
 
   await connectDB();
-  let settings = await SiteSettings.findOne().lean();
+  const settings = await SiteSettings.findOne().lean();
 
   if (!settings) {
     const created = await SiteSettings.create({ blogsVisible: false });
