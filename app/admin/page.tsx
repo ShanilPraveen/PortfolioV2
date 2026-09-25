@@ -8,18 +8,20 @@ import {
   FiTrash2,
   FiFolder,
   FiBookOpen,
+  FiImage,
   FiLogOut,
   FiEye,
   FiEyeOff,
   FiLoader,
 } from 'react-icons/fi';
-import { fetchProjects, fetchBlogs, deleteProject, deleteBlog } from '@/lib/api';
-import { Project, Blog } from '@/types';
+import { fetchProjects, fetchBlogs, fetchMemories, deleteProject, deleteBlog, deleteMemory } from '@/lib/api';
+import { Project, Blog, Memory } from '@/types';
 import ProjectModal from '@/components/ProjectModal';
 import BlogModal from '@/components/BlogModal';
+import MemoryModal from '@/components/MemoryModal';
 import { useSettings } from '@/context/SiteSettingsContext';
 
-type Tab = 'projects' | 'blogs';
+type Tab = 'projects' | 'blogs' | 'memories';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -32,9 +34,11 @@ export default function AdminPage() {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [memories, setMemories] = useState<Memory[]>([]);
   const [activeTab, setActiveTab] = useState<Tab>('projects');
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showBlogModal, setShowBlogModal] = useState(false);
+  const [showMemoryModal, setShowMemoryModal] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // ── Auth guard ──
@@ -55,11 +59,13 @@ export default function AdminPage() {
 
   const refreshProjects = () => fetchProjects().then(setProjects);
   const refreshBlogs = () => fetchBlogs().then(setBlogs);
+  const refreshMemories = () => fetchMemories().then(setMemories);
 
   useEffect(() => {
     if (!isAuthenticated) return;
     refreshProjects();
     refreshBlogs();
+    refreshMemories();
   }, [isAuthenticated]);
 
   const handleLogout = () => {
@@ -86,6 +92,18 @@ export default function AdminPage() {
       await refreshBlogs();
     } catch (err) {
       console.error('Failed to delete blog:', err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleDeleteMemory = async (id: string) => {
+    setDeletingId(id);
+    try {
+      await deleteMemory(id);
+      await refreshMemories();
+    } catch (err) {
+      console.error('Failed to delete memory:', err);
     } finally {
       setDeletingId(null);
     }
@@ -182,6 +200,14 @@ export default function AdminPage() {
           >
             <FiPlusCircle size={16} /> Add Blog
           </button>
+          <button
+            onClick={() => setShowMemoryModal(true)}
+            className="shimmer-btn flex-1 sm:flex-none inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl
+                       bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold text-sm
+                       shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-shadow duration-300"
+          >
+            <FiPlusCircle size={16} /> Upload Memory
+          </button>
         </motion.div>
 
         {/* ── Site Settings ── */}
@@ -268,7 +294,7 @@ export default function AdminPage() {
           <div className="flex border-b border-white/5">
             <button
               onClick={() => setActiveTab('projects')}
-              className={`flex-1 py-4 px-6 text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 ${
+              className={`flex-1 py-4 px-3 sm:px-6 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 ${
                 activeTab === 'projects'
                   ? 'text-indigo-400 border-b-2 border-indigo-500 bg-indigo-500/5'
                   : 'text-slate-500 hover:text-slate-300'
@@ -278,13 +304,23 @@ export default function AdminPage() {
             </button>
             <button
               onClick={() => setActiveTab('blogs')}
-              className={`flex-1 py-4 px-6 text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 ${
+              className={`flex-1 py-4 px-3 sm:px-6 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 ${
                 activeTab === 'blogs'
                   ? 'text-cyan-400 border-b-2 border-cyan-500 bg-cyan-500/5'
                   : 'text-slate-500 hover:text-slate-300'
               }`}
             >
               <FiBookOpen size={15} /> Blogs ({blogs.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('memories')}
+              className={`flex-1 py-4 px-3 sm:px-6 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-200 ${
+                activeTab === 'memories'
+                  ? 'text-purple-400 border-b-2 border-purple-500 bg-purple-500/5'
+                  : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              <FiImage size={15} /> Memories ({memories.length})
             </button>
           </div>
 
@@ -379,6 +415,52 @@ export default function AdminPage() {
                   )}
                 </motion.div>
               )}
+              {activeTab === 'memories' && (
+                <motion.div
+                  key="memories-tab"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0 }}
+                  className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"
+                >
+                  {memories.length === 0 ? (
+                    <p className="text-slate-500 col-span-full text-center py-16">
+                      No memories found. Upload your first photo snapshot!
+                    </p>
+                  ) : (
+                    memories.map((memory) => (
+                      <motion.div
+                        key={memory._id}
+                        variants={itemVariants}
+                        className="relative aspect-square rounded-xl overflow-hidden border border-white/5 bg-white/[0.02] group"
+                      >
+                        <Image
+                          src={memory.imageUrl}
+                          alt="Memory snapshot"
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 flex items-end justify-end p-2.5">
+                          <button
+                            onClick={() => handleDeleteMemory(memory._id)}
+                            disabled={deletingId === memory._id}
+                            className="p-2 text-red-400 hover:text-red-300 bg-black/60 hover:bg-red-500/20 backdrop-blur-md rounded-lg transition-colors duration-200 disabled:opacity-40"
+                            aria-label="Delete memory"
+                          >
+                            {deletingId === memory._id ? (
+                              <FiLoader className="animate-spin text-red-400" size={15} />
+                            ) : (
+                              <FiTrash2 size={15} />
+                            )}
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))
+                  )}
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </div>
@@ -394,6 +476,11 @@ export default function AdminPage() {
         isOpen={showBlogModal}
         onClose={() => setShowBlogModal(false)}
         onBlogAdded={refreshBlogs}
+      />
+      <MemoryModal
+        isOpen={showMemoryModal}
+        onClose={() => setShowMemoryModal(false)}
+        onMemoryAdded={refreshMemories}
       />
     </div>
   );
