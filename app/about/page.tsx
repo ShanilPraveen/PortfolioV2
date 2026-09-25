@@ -1,7 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, Variants } from 'motion/react';
+import { fetchMemories } from '@/lib/api';
+import { Memory } from '@/types';
 import {
   FaBook,
   FaCode,
@@ -89,29 +91,6 @@ const interests = [
   },
 ];
 
-const galleryImages = [
-  '/images/Memo/1.jpg',
-  '/images/Memo/1.1.jpg',
-  '/images/Memo/2.jpg',
-  '/images/Memo/3.jpg',
-  '/images/Memo/4.jpg',
-  '/images/Memo/5.jpg',
-  '/images/Memo/6.jpg',
-  '/images/Memo/7.jpeg',
-  '/images/Memo/8.jpg',
-  '/images/Memo/9.jpg',
-  '/images/Memo/10.jpg',
-  '/images/Memo/11.jpg',
-  '/images/Memo/12.jpg',
-  '/images/Memo/13.jpg',
-  '/images/Memo/14.jpg',
-  '/images/Memo/15.jpg',
-  '/images/Memo/16.jpg',
-  '/images/Memo/17.jpg',
-  '/images/Memo/18.jpg',
-  '/images/Memo/19.jpg',
-];
-
 function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: string; accent: React.ReactNode }) {
   return (
     <motion.div
@@ -130,6 +109,16 @@ function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: st
 }
 
 export default function AboutPage() {
+  const [memories, setMemories] = useState<Memory[]>([]);
+  const [loadingMemories, setLoadingMemories] = useState(true);
+
+  useEffect(() => {
+    fetchMemories().then((data) => {
+      setMemories(data);
+      setLoadingMemories(false);
+    });
+  }, []);
+
   return (
     <div className="relative py-20 overflow-hidden">
       {/* ── Spotlight Light Rays Effect ── */}
@@ -282,28 +271,39 @@ export default function AboutPage() {
               and individual, inspiring me to keep exploring and learning beyond the screen.
             </p>
 
-            <div className="columns-2 sm:columns-3 md:columns-4 gap-3 [column-fill:_balance]">
-              {galleryImages.map((src, i) => (
-                <motion.div
-                  key={src}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.4, delay: (i % 8) * 0.04 }}
-                  whileHover={{ scale: 1.03 }}
-                  className="mb-3 rounded-xl overflow-hidden border border-white/5 break-inside-avoid relative"
-                >
-                  <Image
-                    src={src}
-                    alt={`Memory ${i + 1}`}
-                    width={400}
-                    height={400}
-                    className="w-full h-auto object-cover"
-                    sizes="(max-width: 640px) 50vw, 25vw"
+            {loadingMemories ? (
+              <div className="columns-2 sm:columns-3 md:columns-4 gap-3 [column-fill:_balance]">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="mb-3 rounded-xl bg-white/5 border border-white/5 animate-pulse h-48 break-inside-avoid"
                   />
-                </motion.div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="columns-2 sm:columns-3 md:columns-4 gap-3 [column-fill:_balance]">
+                {memories.map((item, i) => (
+                  <motion.div
+                    key={item._id || item.imageUrl}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.4, delay: (i % 8) * 0.04 }}
+                    whileHover={{ scale: 1.03 }}
+                    className="mb-3 rounded-xl overflow-hidden border border-white/5 break-inside-avoid relative"
+                  >
+                    <Image
+                      src={item.imageUrl}
+                      alt={`Memory ${i + 1}`}
+                      width={400}
+                      height={400}
+                      className="w-full h-auto object-cover"
+                      sizes="(max-width: 640px) 50vw, 25vw"
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
         </motion.section>
 

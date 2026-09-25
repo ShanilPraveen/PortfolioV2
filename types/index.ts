@@ -5,6 +5,7 @@ export interface Project {
   title: string;
   description: string;
   imageUrl: string;
+  publicId?: string;
   githubUrl: string;
   techStack: string[];
 }
@@ -14,9 +15,18 @@ export interface Blog {
   title: string;
   description: string;
   imageUrl: string;
+  publicId?: string;
 }
 
 export interface SiteSettings {
   blogsVisible: boolean;
+}
+
+export interface Memory {
+  _id: string;
+  imageUrl: string;
+  publicId?: string;
+  order?: number;
+  createdAt?: string;
 }
 

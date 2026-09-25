@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FaTimes, FaCloudUploadAlt } from 'react-icons/fa';
 import { addBlog } from '@/lib/api';
+import { Blog } from '@/types';
 
 interface BlogModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onBlogAdded: () => void;
+  onBlogAdded: (newBlog?: Blog) => void;
 }
 
 export default function BlogModal({ isOpen, onClose, onBlogAdded }: BlogModalProps) {
@@ -46,8 +47,8 @@ export default function BlogModal({ isOpen, onClose, onBlogAdded }: BlogModalPro
     setLoading(true);
     setError('');
     try {
-      await addBlog({ title, description, image });
-      onBlogAdded();
+      const newBlog = await addBlog({ title, description, image });
+      onBlogAdded(newBlog);
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add blog.');

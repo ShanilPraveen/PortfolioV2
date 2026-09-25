@@ -4,12 +4,14 @@ export interface IBlog extends Document {
   title: string;
   description: string;
   imageUrl: string;
+  publicId?: string;
 }
 
 const blogSchema = new Schema<IBlog>({
   title: { type: String, required: true },
   description: { type: String, required: true },
   imageUrl: { type: String },
+  publicId: { type: String },
 });
 
 // Guard against model re-registration error in Next.js hot reload / serverless
