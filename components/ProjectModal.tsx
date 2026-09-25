@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FaTimes, FaCloudUploadAlt } from 'react-icons/fa';
 import { addProject } from '@/lib/api';
+import { Project } from '@/types';
 
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onProjectAdded: () => void;
+  onProjectAdded: (newProject?: Project) => void;
 }
 
 export default function ProjectModal({ isOpen, onClose, onProjectAdded }: ProjectModalProps) {
@@ -55,8 +56,8 @@ export default function ProjectModal({ isOpen, onClose, onProjectAdded }: Projec
     setLoading(true);
     setError('');
     try {
-      await addProject({ title, description, githubUrl, techStack, image });
-      onProjectAdded();
+      const newProject = await addProject({ title, description, githubUrl, techStack, image });
+      onProjectAdded(newProject);
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add project.');

@@ -77,6 +77,7 @@ export default function AdminPage() {
     setDeletingId(id);
     try {
       await deleteProject(id);
+      setProjects((prev) => prev.filter((p) => p._id !== id));
       await refreshProjects();
     } catch (err) {
       console.error('Failed to delete project:', err);
@@ -85,10 +86,18 @@ export default function AdminPage() {
     }
   };
 
+  const handleProjectAdded = (newProject?: Project) => {
+    if (newProject) {
+      setProjects((prev) => [newProject, ...prev]);
+    }
+    refreshProjects();
+  };
+
   const handleDeleteBlog = async (id: string) => {
     setDeletingId(id);
     try {
       await deleteBlog(id);
+      setBlogs((prev) => prev.filter((b) => b._id !== id));
       await refreshBlogs();
     } catch (err) {
       console.error('Failed to delete blog:', err);
@@ -97,16 +106,31 @@ export default function AdminPage() {
     }
   };
 
+  const handleBlogAdded = (newBlog?: Blog) => {
+    if (newBlog) {
+      setBlogs((prev) => [newBlog, ...prev]);
+    }
+    refreshBlogs();
+  };
+
   const handleDeleteMemory = async (id: string) => {
     setDeletingId(id);
     try {
       await deleteMemory(id);
+      setMemories((prev) => prev.filter((m) => m._id !== id));
       await refreshMemories();
     } catch (err) {
       console.error('Failed to delete memory:', err);
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handleMemoryAdded = (newMemory?: Memory) => {
+    if (newMemory) {
+      setMemories((prev) => [...prev, newMemory]);
+    }
+    refreshMemories();
   };
 
   const handleToggleBlogs = async () => {
@@ -470,17 +494,17 @@ export default function AdminPage() {
       <ProjectModal
         isOpen={showProjectModal}
         onClose={() => setShowProjectModal(false)}
-        onProjectAdded={refreshProjects}
+        onProjectAdded={handleProjectAdded}
       />
       <BlogModal
         isOpen={showBlogModal}
         onClose={() => setShowBlogModal(false)}
-        onBlogAdded={refreshBlogs}
+        onBlogAdded={handleBlogAdded}
       />
       <MemoryModal
         isOpen={showMemoryModal}
         onClose={() => setShowMemoryModal(false)}
-        onMemoryAdded={refreshMemories}
+        onMemoryAdded={handleMemoryAdded}
       />
     </div>
   );

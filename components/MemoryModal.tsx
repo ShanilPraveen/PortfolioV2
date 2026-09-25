@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FaTimes, FaCloudUploadAlt } from 'react-icons/fa';
 import { addMemory } from '@/lib/api';
+import { Memory } from '@/types';
 
 interface MemoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onMemoryAdded: () => void;
+  onMemoryAdded: (newMemory?: Memory) => void;
 }
 
 export default function MemoryModal({ isOpen, onClose, onMemoryAdded }: MemoryModalProps) {
@@ -56,8 +57,8 @@ export default function MemoryModal({ isOpen, onClose, onMemoryAdded }: MemoryMo
     setLoading(true);
     setError('');
     try {
-      await addMemory({ image });
-      onMemoryAdded();
+      const newMemory = await addMemory({ image });
+      onMemoryAdded(newMemory);
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to upload photo.');

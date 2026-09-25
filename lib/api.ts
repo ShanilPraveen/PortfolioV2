@@ -25,7 +25,7 @@ export const loginAdmin = async (username: string, password: string): Promise<st
 
 export const fetchProjects = async (): Promise<Project[]> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/projects`);
+    const res = await fetch(`${API_BASE_URL}/projects`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch projects');
     return res.json();
   } catch (error) {
@@ -81,7 +81,7 @@ export const deleteProject = async (id: string): Promise<void> => {
 
 export const fetchBlogs = async (): Promise<Blog[]> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/blogs`);
+    const res = await fetch(`${API_BASE_URL}/blogs`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch blogs');
     return res.json();
   } catch (error) {
@@ -188,7 +188,9 @@ export const updateSettings = async (patch: Partial<SiteSettings>): Promise<Site
 
 export const fetchMemories = async (): Promise<Memory[]> => {
   try {
-    const res = await fetch(`${API_BASE_URL}/memories`);
+    const res = await fetch(`${API_BASE_URL}/memories`, {
+      cache: 'no-store',
+    });
     if (!res.ok) throw new Error('Failed to fetch memories');
     return res.json();
   } catch (error) {
