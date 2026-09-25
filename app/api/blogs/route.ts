@@ -51,25 +51,34 @@ export async function POST(request: NextRequest) {
     }
 
     let imageUrl = '';
+    let publicId = '';
 
     // Upload image to Cloudinary if provided
     if (imageFile) {
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      imageUrl = await new Promise<string>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: 'portfolio/blogs' },
-          (error, result) => {
-            if (error || !result) {
-              reject(error ?? new Error('Cloudinary upload failed'));
-            } else {
-              resolve(result.secure_url);
+      const uploadResult = await new Promise<{ secure_url: string; public_id: string }>(
+        (resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: 'portfolio/blogs' },
+            (error, result) => {
+              if (error || !result) {
+                reject(error ?? new Error('Cloudinary upload failed'));
+              } else {
+                resolve({
+                  secure_url: result.secure_url,
+                  public_id: result.public_id,
+                });
+              }
             }
-          }
-        );
-        uploadStream.end(buffer);
-      });
+          );
+          uploadStream.end(buffer);
+        }
+      );
+
+      imageUrl = uploadResult.secure_url;
+      publicId = uploadResult.public_id;
     }
 
     await connectDB();
@@ -78,6 +87,7 @@ export async function POST(request: NextRequest) {
       title,
       description,
       imageUrl,
+      publicId,
     });
 
     const savedBlog = await newBlog.save();

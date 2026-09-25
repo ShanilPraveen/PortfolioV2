@@ -5,6 +5,7 @@ export interface Project {
   title: string;
   description: string;
   imageUrl: string;
+  publicId?: string;
   githubUrl: string;
   techStack: string[];
 }
@@ -14,6 +15,7 @@ export interface Blog {
   title: string;
   description: string;
   imageUrl: string;
+  publicId?: string;
 }
 
 export interface SiteSettings {
