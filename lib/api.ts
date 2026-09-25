@@ -1,4 +1,4 @@
-import { Project, Blog, SiteSettings } from '@/types';
+import { Project, Blog, SiteSettings, Memory } from '@/types';
 
 // All API routes are in the same Next.js app — no need for a full URL
 const API_BASE_URL = '/api';
@@ -182,5 +182,53 @@ export const updateSettings = async (patch: Partial<SiteSettings>): Promise<Site
   }
 
   return res.json();
+};
+
+// ─── Memories ─────────────────────────────────────────────────────────────────
+
+export const fetchMemories = async (): Promise<Memory[]> => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/memories`);
+    if (!res.ok) throw new Error('Failed to fetch memories');
+    return res.json();
+  } catch (error) {
+    console.error('Error fetching memories:', error);
+    return [];
+  }
+};
+
+export const addMemory = async (formData: {
+  image: File;
+}): Promise<Memory> => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No token found');
+
+  const data = new FormData();
+  data.append('image', formData.image);
+
+  const res = await fetch(`${API_BASE_URL}/memories`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: data,
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to add memory');
+  }
+
+  return res.json();
+};
+
+export const deleteMemory = async (id: string): Promise<void> => {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No token found');
+
+  const res = await fetch(`${API_BASE_URL}/memories/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) throw new Error('Failed to delete memory');
 };
 
