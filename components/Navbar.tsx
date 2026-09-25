@@ -138,16 +138,6 @@ export default function Navbar() {
                 </li>
               );
             })}
-
-            {/* CTA */}
-            <li className="ml-3">
-              <Link
-                href="/contact"
-                className="shimmer-btn px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-shadow duration-300"
-              >
-                Hire Me
-              </Link>
-            </li>
           </ul>
 
           {/* Mobile hamburger */}
@@ -209,21 +199,6 @@ export default function Navbar() {
                 );
               })}
 
-              {/* Hire Me button */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: visibleLinks.length * 0.07 + 0.05, duration: 0.35 }}
-                className="mt-6"
-              >
-                <Link
-                  href="/contact"
-                  onClick={() => setMenuOpen(false)}
-                  className="shimmer-btn px-8 py-3 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/30"
-                >
-                  Hire Me
-                </Link>
-              </motion.div>
             </nav>
           </motion.div>
         )}
