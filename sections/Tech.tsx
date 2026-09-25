@@ -54,14 +54,14 @@ const narrativeCards = [
     icon: FaCode,
     title: 'Full-Stack Development',
     description:
-      'Building responsive, scalable web applications end to end — from frontend UI craftsmanship to backend architecture, database design, and deployment.',
+      'Building responsive, scalable web applications end to end, from frontend UI craftsmanship to backend architecture, database design, and deployment.',
     accent: '#6366f1',
   },
   {
     icon: FaCloud,
     title: 'Currently Exploring',
     description:
-      'Diving deeper into cloud-native architecture, machine learning fundamentals, and system design — turning curiosity into practical, shippable projects.',
+      'Gaining foundational knowledge in Machine Learning, Data Science, and Cloud Technologies with a strong commitment to problem-solving and turning curiosity into practical projects.',
     accent: '#22d3ee',
   },
 ];
