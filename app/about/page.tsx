@@ -6,12 +6,12 @@ import {
   FaBook,
   FaCode,
   FaCloud,
-  FaDatabase,
   FaBrain,
   FaCamera,
   FaMountain,
   FaMusic,
   FaImages,
+  FaChartLine,
 } from 'react-icons/fa';
 import LightRays from '@/components/LightRays';
 
@@ -38,7 +38,7 @@ const education = [
     period: '2013 – 2021',
     degree: 'Secondary & Advanced Level Education',
     description:
-      'My journey in technology and creativity would not have been possible without the strong foundation laid by my school — an environment that nurtured curiosity, discipline, and a deep appreciation for learning, guided by dedicated teachers and a vibrant academic community.',
+      'My journey in technology and creativity would not have been possible without the strong foundation laid by my school, an environment that nurtured curiosity, discipline, and a deep appreciation for learning, guided by dedicated teachers and a vibrant academic community.',
   },
 ];
 
@@ -46,7 +46,7 @@ const explorations = [
   {
     icon: FaCode,
     title: 'Full-Stack Development',
-    description: 'Building responsive, scalable web applications with modern frameworks — from frontend aesthetics to backend performance.',
+    description: 'Building responsive, scalable web applications with modern frameworks, from frontend aesthetics to backend performance.',
   },
   {
     icon: FaCloud,
@@ -54,9 +54,9 @@ const explorations = [
     description: 'Exploring infrastructure as code, serverless architectures, and cloud-native development for resilient applications.',
   },
   {
-    icon: FaDatabase,
-    title: 'Databases',
-    description: 'Working with SQL and NoSQL databases, data modeling, and optimization techniques for efficient storage solutions.',
+    icon: FaChartLine,
+    title: 'Data Science',
+    description: 'Exploring data analysis, visualization, and statistical modeling to extract meaningful insights and solve real-world problems through data-driven approaches.',
   },
   {
     icon: FaBrain,
@@ -71,7 +71,7 @@ const interests = [
     title: 'Photography',
     image: '/images/photography.jpg',
     description:
-      'Capturing moments and perspectives through the lens — landscape and street photography, always chasing unique compositions and light.',
+      'Capturing moments and perspectives through the lens, landscape and street photography, always chasing unique compositions and light.',
   },
   {
     icon: FaMountain,
@@ -85,7 +85,7 @@ const interests = [
     title: 'Music',
     image: '/images/music.jpg',
     description:
-      'Finding inspiration and relaxation through various genres — I build playlists that match my mood and keep me focused while coding.',
+      'Finding inspiration and relaxation through various genres. A great mix of sounds keeps me centered during long problem-solving sessions and provides the ideal backdrop to unwind afterwards.',
   },
 ];
 
@@ -279,7 +279,7 @@ export default function AboutPage() {
               Throughout my journey, I&apos;ve taken part in programs, projects, and memorable
               experiences that have shaped my skills and perspective. Each opportunity and
               cherished memory has contributed to my growth as a developer, problem solver,
-              and individual — inspiring me to keep exploring and learning beyond the screen.
+              and individual, inspiring me to keep exploring and learning beyond the screen.
             </p>
 
             <div className="columns-2 sm:columns-3 md:columns-4 gap-3 [column-fill:_balance]">
@@ -319,7 +319,7 @@ export default function AboutPage() {
             &quot;Stay curious. Keep building. Explore beyond the screen.&quot;
           </h3>
           <p className="text-slate-400 text-sm max-w-xl mx-auto leading-relaxed">
-            This philosophy guides my approach to both technology and life — continuous
+            This philosophy guides my approach to both technology and life, continuous
             learning, meaningful projects, and finding inspiration in the world around us.
           </p>
         </motion.div>

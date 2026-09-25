@@ -119,8 +119,7 @@ export default function Hero() {
             className="text-slate-400 leading-relaxed max-w-lg"
             style={{ fontSize: 'var(--text-body)' }}
           >
-            Passionate about crafting elegant, performant web experiences and
-            exploring the intersection of software engineering and intelligent systems.
+            Passionate about building elegant, performant software and exploring the intersection of software engineering and artificial intelligence to solve meaningful problems
           </motion.p>
 
           {/* CTA Buttons — magnetic pull on hover */}
