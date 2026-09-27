@@ -29,7 +29,7 @@ export default function Blogs() {
   }
 
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-12 overflow-hidden">
       {/* Subtle background radial — cyan tint */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 40% at 20% 80%, rgba(34,211,238,0.05) 0%, transparent 60%)' }}

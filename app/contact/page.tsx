@@ -81,37 +81,7 @@ export default function ContactPage() {
           <p className="text-slate-400 text-base max-w-xl mx-auto leading-relaxed">
             Have a project in mind or just want to say hello? Feel free to reach out!
           </p>
-        </motion.div>
-
-        {/* ── Availability indicator ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25, ease: 'easeOut' }}
-          className="flex justify-center mb-10"
-        >
-          <div
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-sm font-medium"
-            style={{
-              borderColor: 'color-mix(in srgb, var(--accent-warm) 30%, transparent)',
-              background: 'color-mix(in srgb, var(--accent-warm) 8%, transparent)',
-              color: 'var(--accent-warm)',
-            }}
-          >
-            {/* Pulsing dot */}
-            <span className="relative flex h-2 w-2">
-              <span
-                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ backgroundColor: 'var(--accent-warm)' }}
-              />
-              <span
-                className="relative inline-flex rounded-full h-2 w-2"
-                style={{ backgroundColor: 'var(--accent-warm)' }}
-              />
-            </span>
-            Open to internships &amp; collaborations
-          </div>
-        </motion.div>
+        </motion.div>  
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* ── Form ── */}

@@ -73,7 +73,7 @@ const cardVariants: Variants = {
 
 export default function Tech() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-8 overflow-hidden">
       {/* Subtle background radial */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 100%, rgba(99,102,241,0.05) 0%, transparent 60%)' }}

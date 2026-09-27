@@ -40,6 +40,61 @@
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--text);
+  --font-bebas: var(--font-bebas);
+}
+
+/* ─── Hero Cinematic Layout Variables ──────────────────────────────────────
+   Central configuration for the editorial hero composition.
+   Tune these CSS custom properties to adjust the visual balance. */
+:root {
+  /* 1. Oversized name typography — SHANIL & PRAVEEN font size */
+  --hero-name-size: clamp(4.5rem, 14.5vw, 20rem);
+
+  /* 2. Vertical position of SHANIL & PRAVEEN from the top (clears 4rem navbar) */
+  --hero-name-top: clamp(6rem, 16vh, 10rem);
+
+  /* 3. Center gap between SHANIL and PRAVEEN around the portrait.
+        Decrease this value to bring SHANIL and PRAVEEN closer to the portrait.
+        Currently tuned so names hug the head and ears tightly. */
+  --hero-center-width: clamp(160px, 14vw, 240px);
+
+  /* 4. Portrait dimensions */
+  --hero-portrait-width: clamp(380px, 42vw, 640px);
+  --hero-portrait-max-width: 640px;
+
+  /* 5. Portrait vertical offset: negative moves portrait HIGHER up.
+        Tuned so the top of head/eyes rises between SHANIL and PRAVEEN. */
+  --hero-portrait-y: clamp(-120px, -12vh, -140px);
+
+  /* 6. Portrait zoom scale factor */
+  --hero-portrait-scale: 1.2;
+
+  /* 7. Portrait transform origin Y: keeps shoulders anchored properly */
+  --hero-portrait-origin-y: 85%;
+
+  /* 8. Supporting info (Full-Stack Developer, bio, CTAs) vertical placement under SHANIL */
+  --hero-content-top: calc(var(--hero-name-top) + var(--hero-name-size) * 0.95 + 3rem);
+
+  /* 9. Supporting info horizontal alignment (left offset) */
+  --hero-content-left: max(clamp(1.25rem, 4vw, 4rem), calc((100vw - 1400px) / 2 + clamp(1.25rem, 4vw, 4rem)));
+
+  /* 10. Supporting info maximum width */
+  --hero-content-width: clamp(280px, 32vw, 450px);
+
+  /* Vertical stretch for names (1 = normal, 1.2 = 20% taller, 1.35 = 35% taller) */
+  --hero-name-scale-y: 1.25;
+}
+
+/* ─── Hero Mobile Overrides (< 1024px) ───────────────────────────────────────
+   On smaller viewports, adapt the portrait scale and vertical offset so the
+   person is naturally framed without pushing into the header. */
+@media (max-width: 1023px) {
+  :root {
+    --hero-portrait-y: -200px;
+    --hero-portrait-scale: 1.12;
+    --hero-portrait-width: min(92vw, 420px);
+    --hero-portrait-max-width: 420px;
+  }
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────────────── */
@@ -98,6 +153,15 @@ body {
    not applied to any page yet, this just makes the font available. */
 .font-display {
   font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* Heavy condensed display typeface — for the oversized editorial name
+   SHANIL / PRAVEEN in the hero. Bebas Neue delivers the billboard-scale
+   lettering that makes the composition feel like a magazine spread. */
+.font-editorial {
+  font-family: var(--font-bebas), 'Bebas Neue', 'Anton', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 /* ─── Grain / Noise Texture ───────────────────────────────────────────────
