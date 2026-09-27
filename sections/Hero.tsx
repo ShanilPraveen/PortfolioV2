@@ -235,9 +235,9 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.5) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.5) 1.5px, transparent 1px)',
           backgroundSize: '32px 32px',
-          opacity: 0.28,
+          opacity: 0.4,
         }}
       />
 
@@ -358,22 +358,6 @@ export default function Hero() {
           animate="show"
           style={{ position: 'absolute', inset: 0 }}
         >
-          {/* Atmospheric glow at base */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '130%',
-              height: '30%',
-              background:
-                'radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.28) 0%, transparent 70%)',
-              pointerEvents: 'none',
-              zIndex: 1,
-            }}
-          />
           <Image
             src="/images/me-no-bg.png"
             alt="Shanil Praveen"
@@ -381,22 +365,28 @@ export default function Hero() {
             priority
             draggable={false}
             className="object-contain object-bottom"
-            sizes="(max-width: 640px) 280px, (max-width: 1024px) 400px, 640px"
+            sizes="(max-width: 640px) 280px, (max-width: 1024px) 400px, 800px"
             style={{
               transform:
                 'translateY(var(--hero-portrait-y, -60px)) scale(var(--hero-portrait-scale, 1.34))',
               transformOrigin: '50% var(--hero-portrait-origin-y, 85%)',
+              /* Fade applied directly to the image so it scales with the image and never cuts the sides */
+              maskImage:
+                'linear-gradient(to bottom, black 0%, black 65%, rgba(0,0,0,0.85) 78%, rgba(0,0,0,0.2) 92%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to bottom, black 0%, black 65%, rgba(0,0,0,0.85) 78%, rgba(0,0,0,0.2) 92%, transparent 100%)',
             }}
           />
         </motion.div>
       </div>
 
-      {/* ── LAYER 3b ── Soft bottom gradient to blend portrait cleanly ── */}
+      {/* ── LAYER 3b ── Smooth gradient connecting hero seamlessly into the tech section (#030712) ── */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none z-[12]"
+        className="absolute bottom-0 left-0 right-0 h-44 pointer-events-none z-[12]"
         aria-hidden="true"
         style={{
-          background: 'linear-gradient(to top, #030712 0%, rgba(3,7,18,0.7) 35%, transparent 100%)',
+          background:
+            'linear-gradient(to top, #030712 0%, rgba(3,7,18,0.95) 25%, rgba(3,7,18,0.6) 60%, transparent 100%)',
         }}
       />
 

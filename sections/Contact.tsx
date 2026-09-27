@@ -88,7 +88,7 @@ function MailBadge() {
 
 export default function Contact() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-8 overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
