@@ -405,42 +405,48 @@ export default function Hero() {
         <SupportingInfo />
       </div>
 
-      {/* ── LAYER 5 ── MOBILE (< lg) Stacked Layout ───────────────────── */}
+      {/* ── LAYER 5 ── MOBILE (< lg) Layout ───────────────────────────── */}
       <div
-        className="lg:hidden relative z-20 flex flex-col items-center justify-between h-full pt-16 pb-6 px-4 overflow-y-auto"
+        className="lg:hidden relative z-20 flex flex-col items-center justify-between h-full pt-16 pb-5 px-4 pointer-events-none"
         style={{ maxHeight: '100svh' }}
       >
-        {/* SHANIL above portrait space */}
-        <motion.div variants={leftNameVariants} initial="hidden" animate="show" className="shrink-0">
+        {/* Unified SHANIL PRAVEEN header at top — no vertical gap, clears image */}
+        <motion.div
+          variants={leftNameVariants}
+          initial="hidden"
+          animate="show"
+          className="shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-0.5 pt-2 pointer-events-auto"
+        >
           <span
-            className="font-editorial leading-none select-none block"
+            className="font-editorial leading-none select-none inline-block"
             style={{
-              fontSize: 'clamp(2.75rem, 13vw, 4.5rem)',
-              color: 'rgba(241,245,249,0.90)',
+              fontSize: 'clamp(2.5rem, 11vw, 3.8rem)',
+              transform: 'scaleY(var(--hero-name-scale-y, 1.25))',
+              transformOrigin: 'top',
+              color: 'rgba(241,245,249,0.92)',
             }}
           >
             SHANIL
           </span>
-        </motion.div>
-
-        {/* Space for portrait on mobile */}
-        <div style={{ height: 'clamp(140px, 28vh, 220px)' }} className="shrink-0" aria-hidden="true" />
-
-        {/* PRAVEEN below portrait */}
-        <motion.div variants={rightNameVariants} initial="hidden" animate="show" className="shrink-0">
           <span
-            className="font-editorial leading-none select-none block"
+            className="font-editorial leading-none select-none inline-block"
             style={{
-              fontSize: 'clamp(2.75rem, 13vw, 4.5rem)',
-              color: 'rgba(241,245,249,0.86)',
+              fontSize: 'clamp(2.5rem, 11vw, 3.8rem)',
+              transform: 'scaleY(var(--hero-name-scale-y, 1.25))',
+              transformOrigin: 'top',
+              color: 'rgba(241,245,249,0.88)',
+              letterSpacing: '-0.005em',
             }}
           >
             PRAVEEN
           </span>
         </motion.div>
 
-        {/* Supporting info */}
-        <div className="w-full shrink-0 pt-2">
+        {/* Space for the portrait in the center — portrait is totally unobstructed */}
+        <div className="flex-1 min-h-[120px] pointer-events-none" aria-hidden="true" />
+
+        {/* Supporting info at bottom */}
+        <div className="w-full shrink-0 pointer-events-auto">
           <SupportingInfo mobile />
         </div>
       </div>

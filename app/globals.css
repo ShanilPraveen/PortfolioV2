@@ -83,7 +83,18 @@
 
   /* Vertical stretch for names (1 = normal, 1.2 = 20% taller, 1.35 = 35% taller) */
   --hero-name-scale-y: 1.25;
+}
 
+/* ─── Hero Mobile Overrides (< 1024px) ───────────────────────────────────────
+   On smaller viewports, adapt the portrait scale and vertical offset so the
+   person is naturally framed without pushing into the header. */
+@media (max-width: 1023px) {
+  :root {
+    --hero-portrait-y: -200px;
+    --hero-portrait-scale: 1.12;
+    --hero-portrait-width: min(92vw, 420px);
+    --hero-portrait-max-width: 420px;
+  }
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────────────── */
