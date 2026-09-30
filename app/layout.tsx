@@ -31,25 +31,46 @@ const bebasNeue = Bebas_Neue({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://shanilpraveen.com';
+
 export const metadata: Metadata = {
-  title: 'Shanil Praveen | Portfolio',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Shanil Praveen | Full-Stack Developer & AI/ML Explorer',
+    template: '%s | Shanil Praveen',
+  },
   description:
-    'Computer Science & Engineering undergraduate at University of Moratuwa. Full-stack developer, AI/ML enthusiast, and builder of thoughtful digital experiences.',
+    'Computer Science & Engineering undergraduate at University of Moratuwa. Full-stack developer, AI/ML enthusiast, and builder of modern digital experiences.',
   keywords: [
     'Shanil Praveen',
-    'Portfolio',
-    'Full Stack Developer',
-    'Computer Science',
-    'University of Moratuwa',
-    'React',
-    'Next.js',
-    'Machine Learning',
+    'Full Stack Developer Sri Lanka',
+    'Computer Science University of Moratuwa',
+    'React Developer',
+    'Next.js Portfolio',
+    'Machine Learning Engineer',
+    'Software Engineer Sri Lanka',
   ],
-  authors: [{ name: 'Shanil Praveen' }],
+  authors: [{ name: 'Shanil Praveen', url: siteUrl }],
+  creator: 'Shanil Praveen',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'Shanil Praveen | Portfolio',
-    description: 'CS & Engineering undergraduate · Full-stack developer · AI/ML enthusiast',
     type: 'website',
+    locale: 'en_US',
+    url: siteUrl,
+    siteName: 'Shanil Praveen Portfolio',
+    title: 'Shanil Praveen | Full-Stack Developer & AI/ML Explorer',
+    description:
+      'Computer Science & Engineering undergraduate at University of Moratuwa. Building thoughtful digital experiences.',
+    images: [
+      {
+        url: '/images/me-no-bg.png',
+        width: 1200,
+        height: 630,
+        alt: 'Shanil Praveen - Portfolio Preview',
+      },
+    ],
   },
 };
 
