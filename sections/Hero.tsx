@@ -229,6 +229,10 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
+      {/* Visually hidden semantic H1 for Search Engines and Screen Readers */}
+      <h1 className="sr-only">
+        Shanil Praveen — Full-Stack Developer &amp; AI/ML Explorer | University of Moratuwa
+      </h1>
 
       {/* ── LAYER 1 ── Static dot-grid ── */}
       <div
