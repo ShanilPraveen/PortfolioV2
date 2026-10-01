@@ -64,7 +64,7 @@ export default function ProjectCard({ project, onClick }: ProjectCardProps) {
         {project.imageUrl ? (
           <Image
             src={project.imageUrl}
-            alt={project.title}
+            alt={`${project.title} - Project preview by Shanil Praveen`}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 50vw"

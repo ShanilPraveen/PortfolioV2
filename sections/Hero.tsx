@@ -364,7 +364,7 @@ export default function Hero() {
         >
           <Image
             src="/images/me-no-bg.png"
-            alt="Shanil Praveen"
+            alt="Shanil Praveen — Full-Stack Developer & AI/ML Explorer"
             fill
             priority
             draggable={false}

@@ -58,7 +58,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
               {project.imageUrl ? (
                 <Image
                   src={project.imageUrl}
-                  alt={project.title}
+                  alt={`${project.title} - Project preview by Shanil Praveen`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 672px"

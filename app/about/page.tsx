@@ -238,7 +238,7 @@ export default function AboutPage() {
                 className="rounded-2xl border border-white/5 bg-[#0d1424] overflow-hidden hover:border-indigo-500/30 transition-colors duration-300"
               >
                 <div className="relative w-full h-48">
-                  <Image src={image} alt={title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                  <Image src={image} alt={`${title} - Personal interest of Shanil Praveen`} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0d1424] via-transparent to-transparent" />
                 </div>
                 <div className="p-5 space-y-2">
@@ -294,7 +294,7 @@ export default function AboutPage() {
                   >
                     <Image
                       src={item.imageUrl}
-                      alt={`Memory ${i + 1}`}
+                      alt={`Shanil Praveen journey and experience snapshot ${i + 1}`}
                       width={400}
                       height={400}
                       className="w-full h-auto object-cover"
