@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { FaGithub, FaLinkedin, FaFacebook, FaKaggle, FaMedium, FaHeart } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaFacebook, FaMedium } from 'react-icons/fa';
 import { IoIosMail } from 'react-icons/io';
 import { useSettings } from '@/context/SiteSettingsContext';
 
@@ -40,7 +40,6 @@ const socials = [
 ];
 
 export default function Footer() {
-  const year = new Date().getFullYear();
   const { blogsVisible, loading } = useSettings();
 
   const visibleQuickLinks = quickLinks.filter(
