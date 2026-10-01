@@ -92,6 +92,34 @@ export const metadata: Metadata = {
   },
 };
 
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Shanil Praveen',
+  url: siteUrl,
+  jobTitle: 'Software Engineer & Full-Stack Developer',
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: 'University of Moratuwa',
+  },
+  sameAs: [
+    'https://github.com/ShanilPraveen',
+    'https://www.linkedin.com/in/shanil-praveen',
+    'https://kaggle.com/shanilpraveen',
+    'https://medium.com/@jspraveen2002',
+    'https://www.facebook.com/profile.php?id=61552762254541',
+  ],
+  knowsAbout: [
+    'Full-Stack Web Development',
+    'Next.js',
+    'React',
+    'TypeScript',
+    'Node.js',
+    'Artificial Intelligence',
+    'Machine Learning',
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -100,6 +128,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${bebasNeue.variable}`}>
       <body>
+        {/* JSON-LD Structured Data Schema for Google & search crawlers */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+
         <SiteSettingsProvider>
           {/* Fixed full-viewport grain texture — a subtle, low-opacity noise
               overlay that sits above all page content. This is a single,
