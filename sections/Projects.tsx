@@ -46,10 +46,11 @@ export default function Projects() {
 
           <Link
             href="/projects"
+            aria-label="View all portfolio projects by Shanil Praveen"
             className="group inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors shrink-0"
           >
             View all projects
-            <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            <FaArrowRight size={12} aria-hidden="true" className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
 
