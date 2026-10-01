@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { FaGithub, FaLinkedin, FaFacebook, FaKaggle, FaMedium, FaHeart } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaFacebook, FaMedium } from 'react-icons/fa';
 import { IoIosMail } from 'react-icons/io';
 import { useSettings } from '@/context/SiteSettingsContext';
 
@@ -40,7 +40,6 @@ const socials = [
 ];
 
 export default function Footer() {
-  const year = new Date().getFullYear();
   const { blogsVisible, loading } = useSettings();
 
   const visibleQuickLinks = quickLinks.filter(
@@ -74,9 +73,10 @@ export default function Footer() {
 
             <a
               href="mailto:shanilpraveen2000@gmail.com"
+              aria-label="Send an email to Shanil Praveen"
               className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors group"
             >
-              <IoIosMail size={16} className="text-indigo-400 group-hover:scale-110 transition-transform" />
+              <IoIosMail size={16} aria-hidden="true" className="text-indigo-400 group-hover:scale-110 transition-transform" />
               shanilpraveen2000@gmail.com
             </a>
           </div>
@@ -113,10 +113,10 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={label}
+                  aria-label={`Visit Shanil Praveen's ${label} profile`}
                   className={`w-9 h-9 rounded-lg border border-white/10 bg-white/5 flex items-center justify-center text-slate-400 hover:text-white transition-all duration-300 ${color}`}
                 >
-                  <Icon size={16} />
+                  <Icon size={16} aria-hidden="true" />
                 </a>
               ))}
             </div>

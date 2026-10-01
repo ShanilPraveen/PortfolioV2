@@ -56,7 +56,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         {blog.imageUrl ? (
           <Image
             src={blog.imageUrl}
-            alt={blog.title}
+            alt={`${blog.title} - Article banner by Shanil Praveen`}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 50vw"
@@ -94,11 +94,15 @@ export default function BlogCard({ blog }: BlogCardProps) {
         </p>
 
         {/* Read more indicator */}
-        <div className="mt-auto pt-3 flex items-center gap-2 text-sm font-medium text-slate-500 group-hover:text-cyan-400 transition-colors duration-200">
-          <FaBookOpen size={13} />
+        <div
+          aria-label={`Read blog post: ${blog.title}`}
+          className="mt-auto pt-3 flex items-center gap-2 text-sm font-medium text-slate-500 group-hover:text-cyan-400 transition-colors duration-200"
+        >
+          <FaBookOpen size={13} aria-hidden="true" />
           <span>Read more</span>
           <FaArrowRight
             size={11}
+            aria-hidden="true"
             className="-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300"
           />
         </div>
