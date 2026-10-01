@@ -198,13 +198,14 @@ export default function ContactPage() {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`Visit Shanil Praveen's ${name} profile`}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.08 }}
                     whileHover={{ y: -3 }}
                     className={`border border-white/10 text-slate-300 p-4 rounded-xl flex flex-col items-center gap-2 transition-all duration-200 ${color}`}
                   >
-                    <Icon size={22} />
+                    <Icon size={22} aria-hidden="true" />
                     <span className="text-sm font-medium">{name}</span>
                   </motion.a>
                 ))}

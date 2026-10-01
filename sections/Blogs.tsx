@@ -58,10 +58,11 @@ export default function Blogs() {
 
           <Link
             href="/blogs"
+            aria-label="View all tech blogs and articles by Shanil Praveen"
             className="group inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors shrink-0"
           >
             View all blogs
-            <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+            <FaArrowRight size={12} aria-hidden="true" className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
 

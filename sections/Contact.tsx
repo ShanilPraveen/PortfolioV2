@@ -137,13 +137,14 @@ export default function Contact() {
 
               <Link
                 href="/contact"
+                aria-label="Send a direct message to Shanil Praveen via contact page"
                 className="shimmer-btn inline-flex items-center gap-2 px-7 py-3.5 rounded-xl
                            bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold
                            shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/45 transition-shadow duration-300"
               >
-                <FaPaperPlane size={13} />
+                <FaPaperPlane size={13} aria-hidden="true" />
                 Send Me a Message
-                <FaArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                <FaArrowRight size={13} aria-hidden="true" className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
 
@@ -162,6 +163,7 @@ export default function Contact() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Connect with Shanil Praveen on ${label} (${handle})`}
                   whileHover={{ x: 4 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 22 }}
                   className={`group relative flex items-center gap-4 rounded-xl border border-white/10 bg-[#0d1424] px-4 py-3.5 overflow-hidden transition-colors duration-300 ${border}`}
@@ -174,7 +176,7 @@ export default function Contact() {
                     className="relative z-10 w-11 h-11 rounded-lg flex items-center justify-center shrink-0"
                     style={{ background: `${color}1a` }}
                   >
-                    <Icon size={19} style={{ color }} />
+                    <Icon size={19} aria-hidden="true" style={{ color }} />
                   </span>
                   <span className="relative z-10 flex-1">
                     <p className="text-white text-sm font-semibold">{label}</p>
@@ -182,6 +184,7 @@ export default function Contact() {
                   </span>
                   <FaArrowRight
                     size={12}
+                    aria-hidden="true"
                     className="relative z-10 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all duration-300"
                   />
                 </motion.a>
