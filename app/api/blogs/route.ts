@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
+import { sanitizeString } from '@/lib/validation';
 
 // Cached data-fetching function — defined OUTSIDE route handlers
 async function getBlogsFromDB() {
@@ -39,8 +40,8 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
+    const title = sanitizeString(formData.get('title'), 200);
+    const description = sanitizeString(formData.get('description'), 10000);
     const imageFile = formData.get('image') as File | null;
 
     if (!title || !description) {
