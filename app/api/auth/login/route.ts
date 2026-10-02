@@ -15,10 +15,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Cast to strings to prevent NoSQL operator injection attacks
+    const usernameStr = String(username).trim();
+    const passwordStr = String(password);
+
+    // Validate maximum length to prevent DoS
+    if (usernameStr.length > 100 || passwordStr.length > 128) {
+      return NextResponse.json(
+        { message: 'Username or password exceeds maximum allowed length' },
+        { status: 400 }
+      );
+    }
+
     await connectDB();
 
     // Find admin by username
-    const admin = await Admin.findOne({ username });
+    const admin = await Admin.findOne({ username: usernameStr });
     if (!admin) {
       return NextResponse.json(
         { message: 'Invalid credentials' },
@@ -27,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Compare password with stored hash
-    const validPass = await bcrypt.compare(password, admin.password);
+    const validPass = await bcrypt.compare(passwordStr, admin.password);
     if (!validPass) {
       return NextResponse.json(
         { message: 'Invalid credentials' },
@@ -35,11 +47,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Sign JWT token with 1 hour expiry
+    // Sign JWT token with 1 hour expiry and explicit HS256 algorithm
     const token = jwt.sign(
       { id: admin._id },
       process.env.JWT_SECRET!,
-      { expiresIn: '1h' }
+      { expiresIn: '1h', algorithm: 'HS256' }
     );
 
     return NextResponse.json({ token }, { status: 200 });
