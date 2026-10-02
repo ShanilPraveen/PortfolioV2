@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import Project from '@/models/Project';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
+import { validateMongoId } from '@/lib/validation';
 
 // DELETE /api/projects/:id — delete a project by ID (protected)
 export async function DELETE(
@@ -16,6 +17,13 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+
+    if (!validateMongoId(id)) {
+      return NextResponse.json(
+        { error: 'Invalid ID format' },
+        { status: 400 }
+      );
+    }
 
     await connectDB();
     const project = await Project.findById(id);
