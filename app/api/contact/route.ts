@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { sanitizeString, validateEmail, escapeHtml } from '@/lib/validation';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // POST /api/contact — send a contact email via Gmail SMTP
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 10 messages per 10 minutes per IP
+    const clientIp = getClientIp(request);
+    const { success } = rateLimit(`contact:${clientIp}`, 10, 10 * 60 * 1000);
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Too many messages. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
 
     const name = sanitizeString(body?.name, 100);

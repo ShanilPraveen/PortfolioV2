@@ -5,6 +5,7 @@ import Blog from '@/models/Blog';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
 import { sanitizeString, validateFileUpload } from '@/lib/validation';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // Cached data-fetching function — defined OUTSIDE route handlers
 async function getBlogsFromDB() {
@@ -33,6 +34,16 @@ export async function GET() {
 
 // POST /api/blogs — add a new blog post (protected, with image upload)
 export async function POST(request: NextRequest) {
+  // Rate limit: 10 blog creations per 10 minutes per IP
+  const clientIp = getClientIp(request);
+  const { success } = rateLimit(`blogs:${clientIp}`, 10, 10 * 60 * 1000);
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   // Verify JWT token
   const authError = verifyToken(request);
   if (authError) return authError;

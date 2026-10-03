@@ -3,9 +3,20 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { connectDB } from '@/lib/mongodb';
 import Admin from '@/models/Admin';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 login attempts per 15 minutes per IP
+    const clientIp = getClientIp(request);
+    const { success } = rateLimit(`login:${clientIp}`, 5, 15 * 60 * 1000);
+    if (!success) {
+      return NextResponse.json(
+        { message: 'Too many login attempts. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const { username, password } = await request.json();
 
     if (!username || !password) {
