@@ -21,8 +21,7 @@ export default function LoginPage() {
       localStorage.setItem('token', token);
       router.push('/admin');
     } catch (err) {
-      console.error('Login failed:', err);
-      setError('Invalid username or password');
+      setError(err instanceof Error ? err.message : 'Invalid username or password');
     } finally {
       setLoading(false);
     }
