@@ -32,11 +32,20 @@ export default function ProjectModal({ isOpen, onClose, onProjectAdded }: Projec
   // Preview selected image
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
-    setImage(file);
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image must be under 5MB');
+        setImage(null);
+        setPreview(null);
+        if (fileRef.current) fileRef.current.value = '';
+        return;
+      }
+      setError('');
+      setImage(file);
       const url = URL.createObjectURL(file);
       setPreview(url);
     } else {
+      setImage(null);
       setPreview(null);
     }
   };
@@ -118,7 +127,7 @@ export default function ProjectModal({ isOpen, onClose, onProjectAdded }: Projec
                   <div className="h-36 flex flex-col items-center justify-center gap-2 text-slate-500 group-hover:text-indigo-400 transition-colors">
                     <FaCloudUploadAlt size={28} />
                     <span className="text-sm">Click to upload project image</span>
-                    <span className="text-xs text-slate-600">JPG, PNG — recommended 16:9</span>
+                    <span className="text-xs text-slate-600">JPG, PNG — recommended 16:9 · Max 5MB</span>
                   </div>
                 )}
                 {preview && (
