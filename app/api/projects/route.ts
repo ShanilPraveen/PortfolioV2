@@ -4,7 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import Project from '@/models/Project';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
-import { sanitizeString, validateUrl } from '@/lib/validation';
+import { sanitizeString, validateUrl, validateFileUpload } from '@/lib/validation';
 
 // Cached data-fetching function — defined OUTSIDE route handlers
 async function getProjectsFromDB() {
@@ -51,6 +51,17 @@ export async function POST(request: NextRequest) {
         { error: 'Title and description are required' },
         { status: 400 }
       );
+    }
+
+    // Validate uploaded image if provided
+    if (imageFile) {
+      const fileError = validateFileUpload(imageFile);
+      if (fileError) {
+        return NextResponse.json(
+          { error: fileError },
+          { status: 400 }
+        );
+      }
     }
 
     // Validate GitHub URL format if provided

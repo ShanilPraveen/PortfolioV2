@@ -4,6 +4,7 @@ import { connectDB } from '@/lib/mongodb';
 import Memory from '@/models/Memory';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
+import { validateFileUpload } from '@/lib/validation';
 
 // Cached data-fetching function — defined OUTSIDE route handlers
 async function getMemoriesFromDB() {
@@ -43,6 +44,14 @@ export async function POST(request: NextRequest) {
     if (!imageFile) {
       return NextResponse.json(
         { error: 'An image file is required' },
+        { status: 400 }
+      );
+    }
+
+    const fileError = validateFileUpload(imageFile);
+    if (fileError) {
+      return NextResponse.json(
+        { error: fileError },
         { status: 400 }
       );
     }
