@@ -96,3 +96,41 @@ export function validateMongoId(id: string): boolean {
   }
   return /^[a-fA-F0-9]{24}$/.test(id.trim());
 }
+
+/**
+ * File upload validation constants
+ */
+export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+export const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+export const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+/**
+ * Validates an uploaded File against size, MIME type, and file extension restrictions.
+ *
+ * @param file - The uploaded File object.
+ * @returns An error message string if validation fails, or `null` if valid.
+ */
+export function validateFileUpload(file: File): string | null {
+  if (!file || typeof file.size !== 'number') {
+    return 'No image file provided';
+  }
+
+  // 1. File size check (max 5MB)
+  if (file.size > MAX_FILE_SIZE) {
+    return 'Image must be under 5MB';
+  }
+
+  // 2. MIME type check
+  if (!ALLOWED_MIME_TYPES.includes(file.type.toLowerCase())) {
+    return 'Only JPEG, PNG, WebP, and GIF images are allowed';
+  }
+
+  // 3. File extension check
+  const ext = file.name ? file.name.split('.').pop()?.toLowerCase() : '';
+  if (!ext || !ALLOWED_EXTENSIONS.includes(ext)) {
+    return 'Only files with .jpg, .jpeg, .png, .webp, or .gif extensions are allowed';
+  }
+
+  return null;
+}
+
