@@ -31,6 +31,7 @@ export default function AdminPage() {
   const { blogsVisible, loading: settingsLoading, updateBlogsVisible } = useSettings();
   const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
   const [settingsError, setSettingsError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -75,18 +76,22 @@ export default function AdminPage() {
 
   const handleDeleteProject = async (id: string) => {
     setDeletingId(id);
+    setActionError(null);
     try {
       await deleteProject(id);
       setProjects((prev) => prev.filter((p) => p._id !== id));
       await refreshProjects();
     } catch (err) {
-      console.error('Failed to delete project:', err);
+      const msg = err instanceof Error ? err.message : 'Failed to delete project.';
+      setActionError(msg);
+      setTimeout(() => setActionError(null), 5000);
     } finally {
       setDeletingId(null);
     }
   };
 
   const handleProjectAdded = (newProject?: Project) => {
+    setActionError(null);
     if (newProject) {
       setProjects((prev) => [newProject, ...prev]);
     }
@@ -95,18 +100,22 @@ export default function AdminPage() {
 
   const handleDeleteBlog = async (id: string) => {
     setDeletingId(id);
+    setActionError(null);
     try {
       await deleteBlog(id);
       setBlogs((prev) => prev.filter((b) => b._id !== id));
       await refreshBlogs();
     } catch (err) {
-      console.error('Failed to delete blog:', err);
+      const msg = err instanceof Error ? err.message : 'Failed to delete blog.';
+      setActionError(msg);
+      setTimeout(() => setActionError(null), 5000);
     } finally {
       setDeletingId(null);
     }
   };
 
   const handleBlogAdded = (newBlog?: Blog) => {
+    setActionError(null);
     if (newBlog) {
       setBlogs((prev) => [newBlog, ...prev]);
     }
@@ -115,18 +124,22 @@ export default function AdminPage() {
 
   const handleDeleteMemory = async (id: string) => {
     setDeletingId(id);
+    setActionError(null);
     try {
       await deleteMemory(id);
       setMemories((prev) => prev.filter((m) => m._id !== id));
       await refreshMemories();
     } catch (err) {
-      console.error('Failed to delete memory:', err);
+      const msg = err instanceof Error ? err.message : 'Failed to delete memory.';
+      setActionError(msg);
+      setTimeout(() => setActionError(null), 5000);
     } finally {
       setDeletingId(null);
     }
   };
 
   const handleMemoryAdded = (newMemory?: Memory) => {
+    setActionError(null);
     if (newMemory) {
       setMemories((prev) => [...prev, newMemory]);
     }
@@ -140,8 +153,8 @@ export default function AdminPage() {
     try {
       await updateBlogsVisible(!blogsVisible);
     } catch (err) {
-      console.error('Failed to toggle blogs visibility:', err);
-      setSettingsError('Failed to update setting. Please try again.');
+      setSettingsError(err instanceof Error ? err.message : 'Failed to update setting. Please try again.');
+      setTimeout(() => setSettingsError(null), 5000);
     } finally {
       setIsUpdatingSettings(false);
     }
@@ -349,6 +362,16 @@ export default function AdminPage() {
           </div>
 
           <div className="p-6">
+            {actionError && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                className="mb-6 bg-red-500/10 border border-red-500/25 text-red-300 px-4 py-3 rounded-xl text-sm"
+              >
+                {actionError}
+              </motion.div>
+            )}
             <AnimatePresence mode="wait">
               {activeTab === 'projects' && (
                 <motion.div
