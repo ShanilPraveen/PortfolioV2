@@ -21,7 +21,7 @@ export function verifyToken(request: NextRequest): NextResponse | null {
   }
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET!);
+    jwt.verify(token, process.env.JWT_SECRET!, { algorithms: ['HS256'] });
     return null; // Token is valid — allow the request to proceed
   } catch {
     return NextResponse.json(

@@ -74,7 +74,10 @@ export const deleteProject = async (id: string): Promise<void> => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error('Failed to delete project');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete project');
+  }
 };
 
 // ─── Blogs ────────────────────────────────────────────────────────────────────
@@ -126,7 +129,10 @@ export const deleteBlog = async (id: string): Promise<void> => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error('Failed to delete blog');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete blog');
+  }
 };
 
 // ─── Contact ──────────────────────────────────────────────────────────────────
@@ -231,6 +237,9 @@ export const deleteMemory = async (id: string): Promise<void> => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!res.ok) throw new Error('Failed to delete memory');
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete memory');
+  }
 };
 

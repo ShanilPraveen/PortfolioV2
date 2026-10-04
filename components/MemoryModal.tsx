@@ -30,9 +30,19 @@ export default function MemoryModal({ isOpen, onClose, onMemoryAdded }: MemoryMo
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image must be under 5MB');
+        setImage(null);
+        setPreview(null);
+        if (fileRef.current) fileRef.current.value = '';
+        return;
+      }
       setImage(file);
       setPreview(URL.createObjectURL(file));
       setError('');
+    } else {
+      setImage(null);
+      setPreview(null);
     }
   };
 
@@ -131,7 +141,7 @@ export default function MemoryModal({ isOpen, onClose, onMemoryAdded }: MemoryMo
                       <FaCloudUploadAlt size={26} />
                     </div>
                     <span className="text-sm font-medium text-slate-300">Click or tap to select image</span>
-                    <span className="text-xs text-slate-500">Supports JPG, PNG, WebP (auto-optimized via Cloudinary)</span>
+                    <span className="text-xs text-slate-500">Supports JPG, PNG, WebP · Max 5MB</span>
                   </div>
                 )}
               </div>

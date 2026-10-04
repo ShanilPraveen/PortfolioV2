@@ -4,6 +4,8 @@ import { connectDB } from '@/lib/mongodb';
 import Project from '@/models/Project';
 import cloudinary from '@/lib/cloudinary';
 import { verifyToken } from '@/lib/auth';
+import { sanitizeString, validateUrl, validateFileUpload } from '@/lib/validation';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 // Cached data-fetching function — defined OUTSIDE route handlers
 async function getProjectsFromDB() {
@@ -32,6 +34,16 @@ export async function GET() {
 
 // POST /api/projects — add a new project (protected, with image upload)
 export async function POST(request: NextRequest) {
+  // Rate limit: 10 project creations per 10 minutes per IP
+  const clientIp = getClientIp(request);
+  const { success } = rateLimit(`projects:${clientIp}`, 10, 10 * 60 * 1000);
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   // Verify JWT token
   const authError = verifyToken(request);
   if (authError) return authError;
@@ -39,10 +51,10 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
-    const githubUrl = formData.get('githubUrl') as string;
-    const techStackRaw = formData.get('techStack') as string;
+    const title = sanitizeString(formData.get('title'), 200);
+    const description = sanitizeString(formData.get('description'), 5000);
+    const githubUrl = sanitizeString(formData.get('githubUrl'), 500);
+    const techStackRaw = sanitizeString(formData.get('techStack'), 1000);
     const imageFile = formData.get('image') as File | null;
 
     if (!title || !description) {
@@ -52,9 +64,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse tech stack from comma-separated string
+    // Validate uploaded image if provided
+    if (imageFile) {
+      const fileError = validateFileUpload(imageFile);
+      if (fileError) {
+        return NextResponse.json(
+          { error: fileError },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Validate GitHub URL format if provided
+    if (githubUrl && !validateUrl(githubUrl)) {
+      return NextResponse.json(
+        { error: 'Invalid GitHub URL. Must be a valid HTTPS URL' },
+        { status: 400 }
+      );
+    }
+
+    // Parse tech stack from comma-separated string, limit to max 20 items, 50 chars each
     const techStack = techStackRaw
-      ? techStackRaw.split(',').map((t) => t.trim()).filter(Boolean)
+      ? techStackRaw
+          .split(',')
+          .map((t) => t.trim().slice(0, 50))
+          .filter(Boolean)
+          .slice(0, 20)
       : [];
 
     let imageUrl = '';

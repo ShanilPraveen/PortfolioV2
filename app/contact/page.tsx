@@ -25,6 +25,7 @@ const socialLinks = [
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -36,17 +37,36 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    setErrorMessage('');
+
+    // Client-side instant format validation
+    const trimmedEmail = formData.email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setErrorMessage('Please enter a valid email address');
+      setSubmitStatus('error');
+      setIsSubmitting(false);
+      setTimeout(() => {
+        setSubmitStatus('idle');
+        setErrorMessage('');
+      }, 5000);
+      return;
+    }
 
     try {
       await sendEmail(formData);
       setSubmitStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      console.error('Error sending email:', error);
+      const msg = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      setErrorMessage(msg);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus('idle'), 4000);
+      setTimeout(() => {
+        setSubmitStatus('idle');
+        setErrorMessage('');
+      }, 5000);
     }
   };
 
@@ -174,7 +194,7 @@ export default function ContactPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-red-500/10 border border-red-500/25 text-red-300 px-4 py-3 rounded-xl text-sm"
                 >
-                  Something went wrong. Please try again.
+                  {errorMessage || 'Something went wrong. Please try again.'}
                 </motion.div>
               )}
             </form>
