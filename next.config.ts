@@ -4,11 +4,11 @@ import type { NextConfig } from "next";
 // 'unsafe-inline' and 'unsafe-eval' are required by Next.js and motion/react.
 const cspHeader = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' https://res.cloudinary.com data: blob:",
-  "connect-src 'self'",
+  "img-src 'self' https://res.cloudinary.com https://*.google-analytics.com https://*.googletagmanager.com data: blob:",
+  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
