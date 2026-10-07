@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+  # Shanil Praveen — Personal Portfolio
 
-First, run the development server:
+  <p align="center">
+    <strong>A modern, cinematic portfolio website showcasing my work, technical skills, and journey in software engineering.</strong>
+  </p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  <p align="center">
+    <img src="https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white" alt="MongoDB" />
+    <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=flat-square&logo=cloudinary&logoColor=white" alt="Cloudinary" />
+  </p>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📖 Overview
 
-## Learn More
+This is my personal portfolio website, where I showcase my software development projects, technical blogs, and personal journey in tech. I built this site to provide a clean, cinematic, and interactive experience for recruiters, fellow developers, and collaborators exploring my work.
 
-To learn more about Next.js, take a look at the following resources:
+I am currently a Computer Science & Engineering undergraduate at the **University of Moratuwa**, passionate about full-stack web development, cloud computing, and AI/ML.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌟 Key Features
 
-## Deploy on Vercel
+* **Cinematic & Interactive UI:** Built with custom typography, ambient textures, smooth micro-interactions, magnetic buttons, and 3D WebGL background particles.
+* **Featured Projects Showcase:** Interactive cards and detail modals highlighting project overviews, architectural details, and live/repository links.
+* **Technical Skills Matrix:** Categorized view of the technologies, languages, frameworks, and developer tools I work with.
+* **Technical Blogs:** A dedicated section for sharing development tutorials, thoughts on software engineering, and AI/ML explorations.
+* **Experiences & Memories:** A responsive gallery capturing hackathons, milestones, and campus memories.
+* **Direct Contact Engine:** A built-in contact form powered by Nodemailer and protected with rate limiting.
+* **Custom Admin Dashboard:** A secure content management portal with JWT authentication to manage projects, blogs, and gallery uploads dynamically.
+* **Search Engine Optimization & Analytics:** Equipped with dynamic sitemaps, structured data (JSON-LD), social share cards (Open Graph), and Google Analytics.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+| :--- | :--- |
+| **Frontend** | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4 |
+| **Animations & 3D** | Motion (Framer Motion), GSAP, OGL (WebGL Particles) |
+| **Backend & Database** | Next.js Serverless Route Handlers, MongoDB Atlas, Mongoose |
+| **Cloud & Media** | Cloudinary (Image CDN) |
+| **Services & Security** | Nodemailer (Email Service), JWT & bcryptjs Authentication |
+| **Deployment** | Vercel |
+
+---
+
+## 📬 Connect With Me
+
+* **Website:** [https://portfolio-v2-five-neon.vercel.app/](https://portfolio-v2-five-neon.vercel.app/)
+* **LinkedIn:** [linkedin.com/in/shanil-praveen](https://www.linkedin.com/in/shanil-praveen)
