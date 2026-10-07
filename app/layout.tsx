@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter, Space_Grotesk, Bebas_Neue } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
@@ -32,6 +33,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://shanilpraveen.com';
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -128,6 +130,28 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${bebasNeue.variable}`}>
       <body>
+        {/* Google Analytics GA4 */}
+        {gaId && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaId}');
+                `,
+              }}
+            />
+          </>
+        )}
+
         {/* JSON-LD Structured Data Schema for Google & search crawlers */}
         <script
           type="application/ld+json"
